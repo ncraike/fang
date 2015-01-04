@@ -30,7 +30,7 @@ class DependencyRegister:
             if isinstance(decorated_func, click.Command):
                 return cls._unwrap_func(decorated_func.callback)
 
-        elif hasattr(decorated_func, '__wrapped__'):
+        if hasattr(decorated_func, '__wrapped__'):
             # Recursion: unwrap more if needed
             return self._unwrap_func(decorated_func.__wrapped__)
         else:
@@ -185,8 +185,8 @@ class Di:
         self.dependencies = DependencyRegister()
         self.providers = ResourceProviderRegister()
         self.resolver = DependencyResolver(
-                dependency_register=dependencies,
-                resource_provider_register=providers)
+                dependency_register=self.dependencies,
+                resource_provider_register=self.providers)
 
         # For use as a decorator
-        self.dependsOn = dependencies.register_by_decorator
+        self.dependsOn = self.dependencies.register_by_decorator
