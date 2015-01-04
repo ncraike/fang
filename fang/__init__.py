@@ -91,11 +91,12 @@ class DependentNotFoundError(DIError):
         super().__init__(message)
 
 class ResourceProviderRegister:
-    def __init__(self):
+    def __init__(self, namespace=None):
+        self.namespace = namespace
         # Maps resource names to a provider
         self.resource_providers = {}
 
-    def register_callable(self, provider, resource_name):
+    def register_callable(self, resource_name, provider):
         if resource_name in self.resource_providers:
             raise ProviderAlreadyRegisteredError(
                     resource_name=resource_name,
@@ -104,8 +105,22 @@ class ResourceProviderRegister:
         self.resource_providers[resource_name] = provider
 
     # For registering providers which always return the same instance
-    def register_instance(self, provider, resource_name):
-        self.register_callable(lambda : provider, resource_name)
+    def register_instance(self, resource_name, provider):
+        self.register_callable(resource_name, lambda : provider)
+
+    def load(self, other_register, allow_overrides=False):
+        if not allow_overrides:
+            own_keys = self.resource_providers.keys()
+            other_keys = other_register.resource_providers.keys()
+            common_keys = own_keys & other_keys
+            if common_keys:
+                # TODO Add new DIError sub-class?
+                raise DIError(
+                        'This register already has providers for keys: '
+                        '{!r}'.format(common_keys))
+
+        self.resource_providers.update(
+                other_register.resource_providers)
 
     def resolve(self, resource_name):
         if resource_name not in self.resource_providers:
