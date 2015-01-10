@@ -122,6 +122,9 @@ class ResourceProviderRegister:
         self.resource_providers.update(
                 other_register.resource_providers)
 
+    def clear(self):
+        self.resource_providers.clear()
+
     def resolve(self, resource_name):
         if resource_name not in self.resource_providers:
             raise ProviderNotFoundError(resource_name=resource_name)
