@@ -32,7 +32,7 @@ class DependencyRegister:
 
         if hasattr(decorated_func, '__wrapped__'):
             # Recursion: unwrap more if needed
-            return self._unwrap_func(decorated_func.__wrapped__)
+            return cls._unwrap_func(decorated_func.__wrapped__)
         else:
             # decorated_func isn't actually decorated, no more
             # unwrapping to do
