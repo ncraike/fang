@@ -1,6 +1,7 @@
 '''
 '''
 
+from functools import partial
 import inspect
 
 try:
@@ -57,16 +58,17 @@ class DependencyRegister:
             self.resources[resource_name] = set()
         self.resources[resource_name].add(dependent)
         
-    def register(self, resource_name, dependent):
+    def register(self, resource_name, dependent=None):
+        if dependent is None:
+            # Give a partial usable as a decorator
+            return partial(self.register, resource_name)
+
         dependent = self._unwrap_dependent(dependent)
         self._register_dependent(dependent, resource_name)
         self._register_resource_dependency(resource_name, dependent)
 
-    def register_by_decorator(self, resource_name):
-        def decorator(dependent):
-            self.register(resource_name, dependent)
-            return dependent
-        return decorator
+        # Return dependent to ease use as decorator
+        return dependent
 
     def query_resources(self, dependent):
         dependent = self._unwrap_dependent(dependent)
@@ -96,13 +98,22 @@ class ResourceProviderRegister:
         # Maps resource names to a provider
         self.resource_providers = {}
 
-    def register_callable(self, resource_name, provider):
+    def register(self, resource_name, provider=None):
+        if provider is None:
+            # Give a partial usable as a decorator
+            return partial(self.register, resource_name)
+
         if resource_name in self.resource_providers:
             raise ProviderAlreadyRegisteredError(
                     resource_name=resource_name,
                     existing_provider=self.resource_providers[resource_name])
 
         self.resource_providers[resource_name] = provider
+
+        # Return provider to ease use as decorator
+        return provider
+
+    register_callable = register
 
     # For registering providers which always return the same instance
     def register_instance(self, resource_name, provider):
@@ -207,4 +218,4 @@ class Di:
                 resource_provider_register=self.providers)
 
         # For use as a decorator
-        self.dependsOn = self.dependencies.register_by_decorator
+        self.dependsOn = self.dependencies.register
