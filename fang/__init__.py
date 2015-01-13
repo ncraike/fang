@@ -57,14 +57,14 @@ class DependencyRegister:
             self.resources[resource_name] = set()
         self.resources[resource_name].add(dependent)
         
-    def register(self, dependent, resource_name):
+    def register(self, resource_name, dependent):
         dependent = self._unwrap_dependent(dependent)
         self._register_dependent(dependent, resource_name)
         self._register_resource_dependency(resource_name, dependent)
 
     def register_by_decorator(self, resource_name):
         def decorator(dependent):
-            self.register(dependent, resource_name)
+            self.register(resource_name, dependent)
             return dependent
         return decorator
 
