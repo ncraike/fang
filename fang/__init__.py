@@ -119,6 +119,10 @@ class ResourceProviderRegister:
     def register_instance(self, resource_name, provider):
         self.register_callable(resource_name, lambda : provider)
 
+    def mass_register(self, resource_names_to_providers):
+        for resource_name, provider in resource_names_to_providers.items():
+            self.register_instance(resource_name, provider)
+
     def load(self, other_register, allow_overrides=False):
         if not allow_overrides:
             own_keys = self.resource_providers.keys()
