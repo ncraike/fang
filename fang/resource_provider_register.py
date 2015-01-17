@@ -2,6 +2,7 @@
 from functools import partial
 
 from .errors import (
+        DIError,
         ProviderAlreadyRegisteredError,
         ProviderNotFoundError)
 
