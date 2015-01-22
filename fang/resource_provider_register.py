@@ -2,7 +2,7 @@
 from functools import partial
 
 from .errors import (
-        DIError,
+        FangError,
         ProviderAlreadyRegisteredError,
         ProviderNotFoundError)
 
@@ -43,8 +43,8 @@ class ResourceProviderRegister:
             other_keys = other_register.resource_providers.keys()
             common_keys = own_keys & other_keys
             if common_keys:
-                # TODO Add new DIError sub-class?
-                raise DIError(
+                # TODO Add new FangError sub-class?
+                raise FangError(
                         'This register already has providers for keys: '
                         '{!r}'.format(common_keys))
 

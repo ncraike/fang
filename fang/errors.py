@@ -1,7 +1,7 @@
 
-class DIError(Exception): pass
+class FangError(Exception): pass
 
-class DependentNotFoundError(DIError):
+class DependentNotFoundError(FangError):
 
     def __init__(self, dependent=None):
         self.dependent = dependent
@@ -15,7 +15,7 @@ class DependentNotFoundError(DIError):
                     "dependent")
         super().__init__(message)
 
-class ProviderAlreadyRegisteredError(DIError):
+class ProviderAlreadyRegisteredError(FangError):
 
     def __init__(self, resource_name=None, existing_provider=None):
         self.resource_name = resource_name
@@ -32,7 +32,7 @@ class ProviderAlreadyRegisteredError(DIError):
                     'resource')
         super().__init__(message)
 
-class ProviderNotFoundError(DIError):
+class ProviderNotFoundError(FangError):
 
     def __init__(self, resource_name=None):
         self.resource_name = resource_name
