@@ -30,8 +30,13 @@ class ResourceProviderRegister:
     register_callable = register
 
     # For registering providers which always return the same instance
-    def register_instance(self, resource_name, provider):
-        self.register_callable(resource_name, lambda : provider)
+    def register_instance(self, resource_name, instance=None):
+        if instance is None:
+            # Give a partial usable as a decorator
+            return partial(self.register_instance, resource_name)
+
+        self.register_callable(resource_name, lambda : instance)
+        return instance
 
     def mass_register(self, resource_names_to_providers):
         for resource_name, provider in resource_names_to_providers.items():
