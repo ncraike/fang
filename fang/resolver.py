@@ -1,4 +1,6 @@
 
+from .errors import ProviderNotFoundError
+
 # This is effectively what is sometimes termed a "dependency injection
 # container".
 class DependencyResolver:
@@ -31,3 +33,13 @@ class DependencyResolver:
             return resources[0]
         else:
             return resources
+
+    def are_all_dependencies_met_for(self, dependent):
+        for resource_name in self.query_dependents_resources(dependent):
+            try:
+                self.resolve(resource_name)
+            except ProviderNotFoundError as e:
+                # TODO: Add error logging here
+                return False
+        else:
+            return True
