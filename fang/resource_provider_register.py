@@ -12,12 +12,15 @@ class ResourceProviderRegister:
         # Maps resource names to a provider
         self.resource_providers = {}
 
-    def register(self, resource_name, provider=None):
+    def register(self, resource_name, provider=None, allow_override=False):
         if provider is None:
             # Give a partial usable as a decorator
-            return partial(self.register, resource_name)
+            return partial(
+                    self.register,
+                    resource_name, allow_override=allow_override)
 
-        if resource_name in self.resource_providers:
+        if ((not allow_override) and
+                resource_name in self.resource_providers):
             raise ProviderAlreadyRegisteredError(
                     resource_name=resource_name,
                     existing_provider=self.resource_providers[resource_name])
@@ -30,17 +33,17 @@ class ResourceProviderRegister:
     register_callable = register
 
     # For registering providers which always return the same instance
-    def register_instance(self, resource_name, instance=None):
+    def register_instance(self, resource_name, instance=None, **kwargs):
         if instance is None:
             # Give a partial usable as a decorator
-            return partial(self.register_instance, resource_name)
+            return partial(self.register_instance, resource_name, **kwargs)
 
-        self.register_callable(resource_name, lambda : instance)
+        self.register(resource_name, provider=(lambda : instance), **kwargs)
         return instance
 
-    def mass_register(self, resource_names_to_providers):
+    def mass_register(self, resource_names_to_providers, **kwargs):
         for resource_name, provider in resource_names_to_providers.items():
-            self.register_instance(resource_name, provider)
+            self.register_instance(resource_name, provider, **kwargs)
 
     def load(self, other_register, allow_overrides=False):
         if not allow_overrides:
