@@ -33,9 +33,9 @@ Here's a simple (if contrived) example of a short program which multiplies two n
     di = fang.Di(namespace='.com.example.myproject')
 
     @di.dependsOn('multiplier')
-    def give_result(n):
+    def multiply(n):
         '''Multiply the given n by some configured multiplier.'''
-        multiplier = di.resolver.unpack(give_result)
+        multiplier = di.resolver.unpack(multiply)
         return multiplier * n
 
     providers = fang.ResourceProviderRegister(namespace='.com.example.myproject')
@@ -50,7 +50,7 @@ Here's a simple (if contrived) example of a short program which multiplies two n
         # will be used to meet our dependencies
         di.providers.load(providers)
         # Prints 10
-        print(give_result(5))
+        print(multiply(5))
 
     if __name__ == '__main__':
         main()
