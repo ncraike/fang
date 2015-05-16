@@ -3,7 +3,7 @@ Fang: Dependency injection for Python
 
 Fang is a dependency injection library for Python.
 
-Dependency injection (DI) is uncommon in Python. It's usually written off as a tool for other languages - languages with static typing, strict interfaces, etc - which is unneeded in Python.
+Dependency injection (DI) is uncommon in Python. It's usually written off as a tool for other languages – languages with static typing, strict interfaces, etc – which is unneeded in Python.
 
 But, dependency injection can actually give plenty of benefits even for Python programs. Among them:
 
@@ -11,15 +11,17 @@ But, dependency injection can actually give plenty of benefits even for Python p
  - more maintainable code from deliberate isolation of functions and modules.
  - clearer code with explicit declaration of dependencies.
 
-Why isn't dependency injection used in Python? Well, dependency injection systems in other languages are usually quite complex, often using their own configuration language (often written in XML), strict interfaces, factory classes, etc. There are a lot of pieces, and few of them fit into Python's existing ecosystem and programming style.
+Why isn't dependency injection used in Python?
+
+Well, dependency injection in other languages is usually quite complex. DI frameworks often use their own configuration language (often written in XML), mandate strict interfaces, use factory classes, and so on. There are a lot of pieces, and few of them fit into Python's existing ecosystem and programming style.
 
 Fang aims to change that. Fang adds dependency injection, but in a Pythonic way, while still maintaining the benefits. Particularly, in Fang:
 
- - dependencies are specified just by identifier strings, not with explicit interface definitions.
+ - dependencies are specified just by identifier strings, not with interface classes.
  - the constructs which meet dependencies (resource providers) are *just functions*, not factory classes.
- - the dependencies a piece of code needs and the dependencies it can provide are each declared concisely with decorators.
- - the linking of dependents and resource providers is done at run-time *in Python*, not with a custom-build configuration language.
- - the pieces are small and easy to understand, but more features (graphing dependencies, verifying interfaces) can be added on a per project basis.
+ - the dependencies which a piece of code needs and the dependencies it can provide are both declared concisely with decorators.
+ - the linking of dependents and resource providers is done at run-time *in Python*, not with a custom-built configuration language.
+ - the pieces are small and easy to understand: the total library is less than 300 lines. But it's clear and simple enough that more features (dependency graphs, interface verification) can be built on top, and used on a per-project basis.
 
 
 Examples
