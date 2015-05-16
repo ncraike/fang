@@ -20,3 +20,37 @@ Fang aims to change that. Fang adds dependency injection, but in a Pythonic way,
  - the dependencies a piece of code needs and the dependencies it can provide are each declared concisely with decorators.
  - the linking of dependents and resource providers is done at run-time *in Python*, not with a custom-build configuration language.
  - the pieces are small and easy to understand, but more features (graphing dependencies, verifying interfaces) can be added on a per project basis.
+
+
+Examples
+--------
+Here's a simple (if contrived) example of a short program which multiplies two numbers. One of the numbers is given as a parameter to a function call. The other number is configured via dependency injection:
+
+.. code-block:: python
+
+    import fang
+
+    di = fang.Di(namespace='.com.example.myproject')
+
+    @di.dependsOn('multiplier')
+    def give_result(n):
+        '''Multiply the given n by some configured multiplier.'''
+        multiplier = di.resolver.unpack(give_result)
+        return multiplier * n
+
+    providers = fang.ResourceProviderRegister(namespace='.com.example.myproject')
+
+    @providers.register('multiplier')
+    def give_multiplier():
+        '''Give a multiplier of 2.'''
+        return 2
+
+    def main():
+        # Here at our program entry-point, we confgure what set of providers
+        # will be used to meet our dependencies
+        di.providers.load(providers)
+        # Prints 10
+        print(give_result(5))
+
+    if __name__ == '__main__':
+        main()
