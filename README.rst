@@ -11,7 +11,7 @@ But, dependency injection can actually give plenty of benefits even for Python p
  - more maintainable code from deliberate isolation of functions and modules.
  - clearer code with explicit declaration of dependencies.
 
-Why isn't dependency injection used in Python? Well, dependency injection systems in other languages are usually quite complex, often using their own configuration language (often written in XML), strict interfaces, factory classes, etc. There are a lot of pieces, and few of them fit in to the existing Python ecosystem and programming style.
+Why isn't dependency injection used in Python? Well, dependency injection systems in other languages are usually quite complex, often using their own configuration language (often written in XML), strict interfaces, factory classes, etc. There are a lot of pieces, and few of them fit into Python's existing ecosystem and programming style.
 
 Fang aims to change that. Fang adds dependency injection, but in a Pythonic way, while still maintaining the benefits. Particularly, in Fang:
 
