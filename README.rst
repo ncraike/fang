@@ -15,8 +15,8 @@ Why isn't dependency injection used in Python? Well, dependency injection system
 
 Fang aims to change that. Fang adds dependency injection, but in a Pythonic way, while still maintaining the benefits. Particularly, in Fang:
 
- - Dependencies are specified just by identifier strings, not with explicit interface definitions.
- - The constructs which meet dependencies (resource providers) are *just functions*, not factory classes.
- - The dependencies a piece of code needs and the dependencies it can provide are each declared concisely with decorators. 
- - The linking of dependents and resource providers is done at run-time *in Python*, not with a custom-build configuration language.
- - The pieces are small and easy to understand, but more features (graphing dependencies, verifying interfaces) can be added on a per project basis.
+ - dependencies are specified just by identifier strings, not with explicit interface definitions.
+ - the constructs which meet dependencies (resource providers) are *just functions*, not factory classes.
+ - the dependencies a piece of code needs and the dependencies it can provide are each declared concisely with decorators.
+ - the linking of dependents and resource providers is done at run-time *in Python*, not with a custom-build configuration language.
+ - the pieces are small and easy to understand, but more features (graphing dependencies, verifying interfaces) can be added on a per project basis.
