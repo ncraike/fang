@@ -6,7 +6,7 @@ di = fang.Di(namespace='.com.example.myproject')
 
 @di.dependsOn('multiplier')
 def multiply(n):
-    '''Multiply the given n by some configured multiplier.'''
+    '''Multiply the given number n by some configured multiplier.'''
     multiplier = di.resolver.unpack(multiply)
     return multiplier * n
 
