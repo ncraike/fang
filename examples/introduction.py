@@ -1,4 +1,7 @@
 #!/bin/python
+'''
+This example is used in README.rst as the first introduction to Fang.
+'''
 
 import fang
 
