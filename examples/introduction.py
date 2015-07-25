@@ -21,7 +21,7 @@ def give_multiplier():
     return 2
 
 def main():
-    # Here at our program entry-point, we confgure what set of providers
+    # Here at our program entry-point, we configure what set of providers
     # will be used to meet our dependencies
     di.providers.load(providers)
     # Prints 10
