@@ -41,5 +41,30 @@ class Test_DependencyRegister_register:
         dep_reg.register('fake resource name', 'fake dependent')
 
     def test__calling_with_dependent_should_return_dependent(self, dep_reg):
+        '''
+        When called with a resource name and a dependent, register()
+        should return the given dependent.
+
+        This behaviour allows use of register() as a decorator.
+        '''
         result = dep_reg.register('fake resource name', 'fake dependent')
         assert result == 'fake dependent'
+
+    def test__calling_should_add_dependent_to_dependents(
+            self, dep_reg):
+        '''
+        After calling register() with a resource name and dependent,
+        instance.dependents should contain dependent.
+        '''
+        dep_reg.register('fake resource name', 'fake dependent')
+        assert 'fake dependent' in dep_reg.dependents
+
+    def test__calling_should_add_dependent_mapping_to_resource_name(
+            self, dep_reg):
+        '''
+        After calling register() with a resource name and dependent,
+        the instance.dependents[dependent] should contain resource name.
+        '''
+        dep_reg.register('fake resource name', 'fake dependent')
+        resources_dependent_on = dep_reg.dependents.get('fake dependent')
+        assert 'fake resource name' in resources_dependent_on
