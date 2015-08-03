@@ -14,7 +14,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.7.2',
+    version='0.7.3',
 
     description='A dependency injection system for python',
     long_description=long_description,
@@ -24,7 +24,7 @@ setup(
 
     # Author details
     author='Nathan Craike',
-    author_email='ncraike@gmail.com',
+    author_email='me@ncraike.com',
 
     # Choose your license
     license='MIT',
@@ -47,7 +47,6 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
 
