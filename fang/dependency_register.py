@@ -58,6 +58,10 @@ class DependencyRegister:
         self.resources[resource_name].add(dependent)
         
     def register(self, resource_name, dependent=None):
+        '''
+        Register the given dependent as depending on the "resource"
+        named by resource_name.
+        '''
         if dependent is None:
             # Give a partial usable as a decorator
             return partial(self.register, resource_name)
