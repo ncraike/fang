@@ -1,0 +1,12 @@
+#
+# Controls configuration for test coverage.
+#
+# This configures the Coverage.py library which pytest-cov uses.
+#
+# See http://nedbatchelder.com/code/coverage/config.html for docs.
+#
+[run]
+branch = True
+
+[html]
+directory = tests/htmlcov
