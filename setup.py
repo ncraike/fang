@@ -69,7 +69,7 @@ setup(
     extras_require = {
         'dev': [],
         'test': ['pytest'],
-        'docs': ['docutils'],
+        'docs': ['docutils', 'Pygments'],
     },
 
     # If there are data files included in your packages that need to be
