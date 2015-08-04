@@ -1,0 +1,17 @@
+sudo: false
+language: python
+python:
+  - "3.3"
+  - "3.4"
+  - pypy3
+  - nightly
+install:
+ - pip install -U pip
+ - pip install -U wheel setuptools
+ - pip install -U .[docs,test]
+ - pip list
+ - python --version
+script:
+ - py.test tests/
+ - rst2html.py README.rst README.html
+ - rst2html.py DESCRIPTION.rst DESCRIPTION.html
