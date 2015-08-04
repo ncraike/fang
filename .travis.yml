@@ -3,9 +3,7 @@ language: python
 python:
   - "3.3"
   - "3.4"
-  - "3.5"
   - pypy3
-  - nightly
 install:
  - pip install -U pip
  - pip install -U wheel setuptools
