@@ -14,3 +14,5 @@ script:
  - py.test --cov=fang --cov-config=tests/.coveragerc --cov-report=html --cov-report=term tests/
  - rst2html.py README.rst README.html
  - rst2html.py DESCRIPTION.rst DESCRIPTION.html
+after_success:
+ - codecov

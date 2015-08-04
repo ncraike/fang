@@ -68,7 +68,7 @@ setup(
     # $ pip install -e .[dev,test]
     extras_require = {
         'dev': [],
-        'test': ['pytest', 'pytest-cov'],
+        'test': ['pytest', 'pytest-cov', 'codecov'],
         'docs': ['docutils', 'Pygments'],
     },
 
