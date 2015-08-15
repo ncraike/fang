@@ -11,6 +11,15 @@ import functools
 def dep_reg():
     return DependencyRegister()
 
+@pytest.fixture(scope='function')
+def fake_resource_name():
+    return 'fake resource name'
+
+@pytest.fixture(scope='function')
+def fake_dependent():
+    return 'fake dependent'
+
+
 class Test_DependencyRegister__construction:
 
     def test__new_dep_reg_can_be_created(self, dep_reg):
@@ -24,47 +33,50 @@ class Test_DependencyRegister__construction:
 
 class Test_DependencyRegister_register:
 
-    def test__can_call_with_just_resource_name(self, dep_reg):
-        dep_reg.register('fake resource name')
+    def test__can_call_with_just_resource_name(
+            self, dep_reg, fake_resource_name):
+        dep_reg.register(fake_resource_name)
 
     def test__calling_with_just_resource_name_should_give_partial(
-            self, dep_reg):
+            self, dep_reg, fake_resource_name):
 
-        result = dep_reg.register('fake resource name')
+        result = dep_reg.register(fake_resource_name)
 
         # register() should give a partial of itself with one arg fixed
         assert isinstance(result, functools.partial)
         assert result.func == dep_reg.register
-        assert result.args == ('fake resource name',)
+        assert result.args == (fake_resource_name,)
 
-    def test__can_call_with_resource_name_and_dependent(self, dep_reg):
-        dep_reg.register('fake resource name', 'fake dependent')
+    def test__can_call_with_resource_name_and_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
+        dep_reg.register(fake_resource_name, fake_dependent)
 
-    def test__calling_with_dependent_should_return_dependent(self, dep_reg):
+    def test__calling_with_dependent_should_return_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
         '''
         When called with a resource name and a dependent, register()
         should return the given dependent.
 
         This behaviour allows use of register() as a decorator.
         '''
-        result = dep_reg.register('fake resource name', 'fake dependent')
-        assert result == 'fake dependent'
+        result = dep_reg.register(fake_resource_name, fake_dependent)
+        assert result == fake_dependent
 
-    def test__calling_should_add_dependent_to_dependents(
-            self, dep_reg):
+    def test__registering_new_dependent_should_add_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
         '''
         After calling register() with a resource name and dependent,
         instance.dependents should contain dependent.
         '''
-        dep_reg.register('fake resource name', 'fake dependent')
-        assert 'fake dependent' in dep_reg.dependents
+        dep_reg.register(fake_resource_name, fake_dependent)
+        assert fake_dependent in dep_reg.dependents
 
-    def test__calling_should_add_dependent_mapping_to_resource_name(
-            self, dep_reg):
+    def test__registering_new_dependent_should_add_resource_name(
+            self, dep_reg, fake_resource_name, fake_dependent):
         '''
         After calling register() with a resource name and dependent,
         the instance.dependents[dependent] should contain resource name.
         '''
-        dep_reg.register('fake resource name', 'fake dependent')
-        resources_dependent_on = dep_reg.dependents.get('fake dependent')
-        assert 'fake resource name' in resources_dependent_on
+        dep_reg.register(fake_resource_name, fake_dependent)
+        resources_dependent_on = dep_reg.dependents.get(fake_dependent)
+        assert fake_resource_name in resources_dependent_on
