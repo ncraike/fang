@@ -40,3 +40,40 @@ class Test_DependencyRegister__register_dependent:
         dep_reg._register_dependent(fake_dependent, fake_resource_name)
 
         assert fake_resource_name in dep_reg.dependents[fake_dependent]
+
+class Test_DependencyRegister__register_resource_dependency:
+
+    def test__can_call_with_resource_name_and_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
+        dep_reg._register_resource_dependency(
+                fake_resource_name, fake_dependent)
+
+    def test__if_resource_name_not_in_resources_calling_adds_it(
+            self, dep_reg, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in dep_reg.resources
+        dep_reg.resources.pop(fake_resource_name, None)
+
+        dep_reg._register_resource_dependency(
+                fake_resource_name, fake_dependent)
+
+        assert fake_resource_name in dep_reg.resources
+
+    def test__if_resource_name_is_not_in_resources_calling_adds_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in dep_reg.resources
+        dep_reg.resources.pop(fake_resource_name, None)
+
+        dep_reg._register_resource_dependency(
+                fake_resource_name, fake_dependent)
+
+        assert fake_dependent in dep_reg.resources[fake_resource_name]
+
+    def test__if_resource_name_is_in_resources_calling_adds_dependent(
+            self, dep_reg, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in dep_reg.resources
+        dep_reg.resources[fake_resource_name] = set()
+
+        dep_reg._register_resource_dependency(
+                fake_resource_name, fake_dependent)
+
+        assert fake_dependent in dep_reg.resources[fake_resource_name]
