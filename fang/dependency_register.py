@@ -48,6 +48,12 @@ class DependencyRegister:
             return cls._unwrap_func(dependent)
 
     def _register_dependent(self, dependent, resource_name):
+        '''
+        Register a mapping of the dependent to resource name.
+
+        After calling, dependency_register.dependents[dependent] should
+        contain resource_name.
+        '''
         if dependent not in self.dependents:
             self.dependents[dependent] = []
         self.dependents[dependent].insert(0, resource_name)
