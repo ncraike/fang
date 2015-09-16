@@ -1,4 +1,8 @@
 
+import functools
+
+# Class under test:
+from fang.dependency_register import DependencyRegister
 
 class Test_DependencyRegister__construction:
 
@@ -77,3 +81,78 @@ class Test_DependencyRegister__register_resource_dependency:
                 fake_resource_name, fake_dependent)
 
         assert fake_dependent in dep_reg.resources[fake_resource_name]
+
+class Test_DependencyRegister_register:
+
+    def test__giving_None_for_dependent__should_return_partial_of_register(
+            self, dep_reg, mock_dep_reg, fake_resource_name):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, None)
+
+        # register() should give a partial of self.register with one arg fixed
+        assert isinstance(result, functools.partial)
+        assert result.func == mock_dep_reg.register
+        assert result.args == (fake_resource_name,)
+
+    def test__giving_resource_name_and_dependent__should_call_self__unwrap_dependent(
+            self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, fake_dependent)
+
+        # Assert self._unwrap_dependent() called as we expect
+        mock_dep_reg._unwrap_dependent.assert_called_with(fake_dependent)
+
+    def test__giving_resource_name_and_dependent__should_return_unwrapped_dependent(
+            self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, fake_dependent)
+
+        # Assert return value was whatever self._unwrap_dependent returned
+        assert result == mock_dep_reg._unwrap_dependent.return_value
+
+    def test__giving_resource_name_and_dependent__should_call_self__register_dependent(
+            self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, fake_dependent)
+
+        unwrapped_dependent = mock_dep_reg._unwrap_dependent.return_value
+
+        # Assert self._register_dependent() called as we expect
+        mock_dep_reg._register_dependent.assert_called_with(
+                unwrapped_dependent, fake_resource_name)
+
+    def test__giving_resource_name_and_dependent__should_call_self__register_resource_dependency(
+            self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, fake_dependent)
+
+        unwrapped_dependent = mock_dep_reg._unwrap_dependent.return_value
+
+        # Assert self._register_resource_dependency() called as we expect
+        mock_dep_reg._register_resource_dependency.assert_called_with(
+                fake_resource_name, unwrapped_dependent)
