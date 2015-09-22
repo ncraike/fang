@@ -4,6 +4,12 @@ import functools
 # Class under test:
 from fang.dependency_register import DependencyRegister
 
+
+# This should be in some kind of testing utils module
+def give_unexpected_calls(method_calls, expected_methods_names):
+    return [call for call in method_calls
+            if call[0] not in expected_methods_names]
+
 class Test_DependencyRegister__construction:
 
     def test__after_creation__dependents_should_be_empty(self, dep_reg):
@@ -159,10 +165,6 @@ class Test_DependencyRegister_register:
 
     def test__giving_resource_name_and_dependent__should_only_call_expected_methods(
             self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
-
-        def give_unexpected_calls(method_calls, expected_methods_names):
-            return [call for call in method_calls
-                    if call[0] not in expected_methods_names]
 
         # Method under test
         #
