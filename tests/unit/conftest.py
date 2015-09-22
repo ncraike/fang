@@ -13,7 +13,7 @@ def dep_reg():
 @pytest.fixture(scope='function')
 def mock_dep_reg():
     return unittest.mock.NonCallableMock(
-            spec=DependencyRegister)
+            spec=DependencyRegister())
 
 @pytest.fixture(scope='function')
 def fake_resource_name():
