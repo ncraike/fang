@@ -156,3 +156,33 @@ class Test_DependencyRegister_register:
         # Assert self._register_resource_dependency() called as we expect
         mock_dep_reg._register_resource_dependency.assert_called_with(
                 fake_resource_name, unwrapped_dependent)
+
+    def test__giving_resource_name_and_dependent__should_only_call_expected_methods(
+            self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
+
+        def give_unexpected_calls(method_calls, expected_method_names):
+            return [call for call in method_calls
+                    if call[0] not in expected_methods_names]
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister.register(
+                mock_dep_reg, fake_resource_name, fake_dependent)
+
+        expected_methods_names = {
+                '_unwrap_dependent',
+                '_register_dependent',
+                '_register_resource_dependency'}
+
+        unexpected_calls = give_unexpected_calls(
+                mock_dep_reg.method_calls, expected_methods_names)
+
+        assert not unexpected_calls, (
+                'Unexpected methods called: {!r} \n'
+                'Called methods: {!r} \n'
+                'Expected method names: {!r}'.format(
+                unexpected_calls,
+                mock_dep_reg.method_calls,
+                expected_methods_names))
