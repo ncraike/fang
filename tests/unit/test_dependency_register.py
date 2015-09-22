@@ -160,7 +160,7 @@ class Test_DependencyRegister_register:
     def test__giving_resource_name_and_dependent__should_only_call_expected_methods(
             self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
 
-        def give_unexpected_calls(method_calls, expected_method_names):
+        def give_unexpected_calls(method_calls, expected_methods_names):
             return [call for call in method_calls
                     if call[0] not in expected_methods_names]
 
