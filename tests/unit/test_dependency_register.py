@@ -1,6 +1,10 @@
 
 import functools
 
+import pytest
+
+from fang.errors import DependentNotFoundError
+
 # Class under test:
 from fang.dependency_register import DependencyRegister
 
@@ -188,7 +192,6 @@ class Test_DependencyRegister_register:
 
     def test__giving_resource_name_and_dependent__should_only_call_expected_methods(
             self, dep_reg, mock_dep_reg, fake_resource_name, fake_dependent):
-
         # Method under test
         #
         # We call the method on the class, not an instance, so we can
@@ -211,3 +214,35 @@ class Test_DependencyRegister_register:
                 unexpected_calls,
                 mock_dep_reg.method_calls,
                 expected_methods_names))
+
+class Test_DependencyRegister_query_resources:
+
+    def test__giving_dependent__should_call_self__unwrap_dependent(
+            self, mock_dep_reg, fake_dependent):
+        try:
+            result = DependencyRegister.query_resources(
+                    mock_dep_reg, fake_dependent)
+        except:
+            pass
+
+        # Assert self._unwrap_dependent() called as we expect
+        mock_dep_reg._unwrap_dependent.assert_called_with(fake_dependent)
+
+    def test__giving_dependent_not_in_self_dependents__should_raise_DependentNotFoundError(
+            self, mock_dep_reg, fake_dependent):
+
+        # Method under test
+        with pytest.raises(DependentNotFoundError):
+            result = DependencyRegister.query_resources(
+                    mock_dep_reg, fake_dependent)
+
+    def test__giving_dependent_in_self_dependents__should_return_resources(
+            self, mock_dep_reg, fake_dependent, fake_resource_name):
+
+        mock_dep_reg._unwrap_dependent.return_value = 'unwrapped dependent'
+        mock_dep_reg.dependents['unwrapped dependent'] = [fake_resource_name]
+
+        # Method under test
+        result = DependencyRegister.query_resources(
+                mock_dep_reg, fake_dependent)
+        assert result == [fake_resource_name]
