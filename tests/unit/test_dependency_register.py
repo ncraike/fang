@@ -1,5 +1,6 @@
 
 import functools
+import unittest.mock
 
 import pytest
 
@@ -286,3 +287,100 @@ class Test_DependencyRegister__unwrap_dependent:
         result = _unwrap_dependent(mock_dep_reg_class, fake_dependent)
 
         assert result == mock_dep_reg_class._unwrap_func.return_value
+
+class Test_DependencyRegister__unwrap_func:
+    '''
+    Test DependencyRegister._unwrap_func().
+    '''
+
+    def test__giving_undecorated_function__should_return_function(
+            self, mock_dep_reg_class, undecorated_function):
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_func = DependencyRegister._unwrap_func.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_func(mock_dep_reg_class, undecorated_function)
+
+        assert result == undecorated_function
+
+    def test__giving_decorated_function__should_make_recursive_call_with_undecorated_function(
+            self, mock_dep_reg_class, undecorated_function, decorator):
+
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_func = DependencyRegister._unwrap_func.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_func(
+                mock_dep_reg_class, decorator(undecorated_function))
+
+        # Assert recursive call was made as expected
+        mock_dep_reg_class._unwrap_func.assert_called_with(undecorated_function)
+
+    def test__giving_decorated_function__should_return_result_of_recursive_call(
+            self, mock_dep_reg_class, undecorated_function, decorator):
+
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_func = DependencyRegister._unwrap_func.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_func(
+                mock_dep_reg_class, decorator(undecorated_function))
+
+        assert result == mock_dep_reg_class._unwrap_func.return_value
+
+@pytest.fixture(scope='function')
+def with_click_imported(request, fake_click_module):
+    '''
+    Patch fake.dependency_register.click with a fake version of the
+    click module, but just for the length of the test.
+
+    We use pytest "fixture finalization" to cleanup the patching when
+    the test is done.
+    '''
+    patcher = unittest.mock.patch(
+            'fang.dependency_register.click', fake_click_module)
+    patcher.start()
+    request.addfinalizer(patcher.stop)
+
+@pytest.mark.usefixtures('with_click_imported')
+class Test_DependencyRegister__unwrap_func__with_click_imported(
+        Test_DependencyRegister__unwrap_func):
+    '''
+    Test DependencyRegister._unwrap_func(), but this time with
+    the "click" module (well, a fake version of it) imported.
+
+    We do this to test fang's workaround for the click.command()
+    decorator not setting __wrapped__.
+
+    This is done as a sub-class of the previous class, so that in
+    addition to testing the click.Command workaround, we also test that
+    importing click hasn't broken the other behaviours we just tested
+    for.
+
+    This is a bit hacky (I'm not wild about sub-classes in tests), but
+    it's the best I can come up with using unittest.mock and pytest.
+    '''
+
+    def test__giving_click_command__should_make_recursive_call_with_command_callback(
+            self, mock_dep_reg_class, fake_click_module,
+            fake_click_Command_class):
+
+        click_command = fake_click_Command_class('click.Command callback')
+
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_func = DependencyRegister._unwrap_func.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_func(
+                mock_dep_reg_class, click_command)
+
+        mock_dep_reg_class._unwrap_func.assert_called_with(
+                click_command.callback)
