@@ -4,7 +4,7 @@ from .resource_provider_register import ResourceProviderRegister
 from .resolver import DependencyResolver
 
 class Di:
-    
+
     def __init__(self, namespace=None):
         self.namespace = namespace
         self.dependencies = DependencyRegister()

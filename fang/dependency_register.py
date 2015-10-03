@@ -62,7 +62,7 @@ class DependencyRegister:
         if resource_name not in self.resources:
             self.resources[resource_name] = set()
         self.resources[resource_name].add(dependent)
-        
+
     def register(self, resource_name, dependent=None):
         '''
         Register the given dependent as depending on the "resource"
@@ -86,5 +86,3 @@ class DependencyRegister:
             raise DependentNotFoundError(dependent=dependent)
 
         return self.dependents[dependent]
-
-
