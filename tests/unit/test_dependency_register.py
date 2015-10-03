@@ -246,3 +246,43 @@ class Test_DependencyRegister_query_resources:
         result = DependencyRegister.query_resources(
                 mock_dep_reg, fake_dependent)
         assert result == [fake_resource_name]
+
+class Test_DependencyRegister__unwrap_dependent:
+
+    def test__giving_class_dependent__should_return_dependent_as_is(
+            self, mock_dep_reg_class, fake_dependent_which_is_a_class):
+
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_dependent = DependencyRegister._unwrap_dependent.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_dependent(
+                mock_dep_reg_class, fake_dependent_which_is_a_class)
+
+        assert result == fake_dependent_which_is_a_class
+
+    def test__giving_non_class_dependent__should_call__unwrap_func_with_dependent(
+            self, mock_dep_reg_class, fake_dependent):
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_dependent = DependencyRegister._unwrap_dependent.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_dependent(mock_dep_reg_class, fake_dependent)
+
+        mock_dep_reg_class._unwrap_func.assert_called_with(fake_dependent)
+
+    def test__giving_non_class_dependent__should_return_result_of__unwrap_func(
+            self, mock_dep_reg_class, fake_dependent):
+        # This unwraps the @classmethod decoration to reach the original
+        # function, so we can specify 'cls' as a mock of the
+        # DependencyRegister class.
+        _unwrap_dependent = DependencyRegister._unwrap_dependent.__func__
+
+        # Class method under test (tested as the undecorated function)
+        result = _unwrap_dependent(mock_dep_reg_class, fake_dependent)
+
+        assert result == mock_dep_reg_class._unwrap_func.return_value

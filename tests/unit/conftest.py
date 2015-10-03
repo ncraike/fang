@@ -19,9 +19,20 @@ def mock_dep_reg():
     return mock_dep_reg
 
 @pytest.fixture(scope='function')
+def mock_dep_reg_class():
+    return unittest.mock.Mock(
+            spec=DependencyRegister)
+
+@pytest.fixture(scope='function')
 def fake_resource_name():
     return 'fake resource name'
 
 @pytest.fixture(scope='function')
 def fake_dependent():
     return 'fake dependent'
+
+@pytest.fixture(scope='function')
+def fake_dependent_which_is_a_class():
+    class FakeDependentWhichIsAClass:
+        pass
+    return FakeDependentWhichIsAClass
