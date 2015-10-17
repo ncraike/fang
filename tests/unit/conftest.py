@@ -9,19 +9,19 @@ import pytest
 from fang.dependency_register import DependencyRegister
 
 @pytest.fixture(scope='function')
-def dep_reg():
+def DependencyRegister_instance():
     return DependencyRegister()
 
 @pytest.fixture(scope='function')
-def mock_dep_reg():
-    mock_dep_reg = unittest.mock.NonCallableMock(
+def mock_DependenyRegister_instance():
+    mock_DependenyRegister_instance = unittest.mock.NonCallableMock(
             spec=DependencyRegister())
-    mock_dep_reg.dependents = {}
-    mock_dep_reg.resources = {}
-    return mock_dep_reg
+    mock_DependenyRegister_instance.dependents = {}
+    mock_DependenyRegister_instance.resources = {}
+    return mock_DependenyRegister_instance
 
 @pytest.fixture(scope='function')
-def mock_dep_reg_class():
+def mock_DependencyRegister_class():
     return unittest.mock.Mock(
             spec=DependencyRegister)
 
