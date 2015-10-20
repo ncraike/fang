@@ -26,8 +26,14 @@ class Test_DependencyRegister__construction:
 class Test_DependencyRegister__register_dependent:
 
     def test__giving_dependent_and_resource_name__should_succeed(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        DependencyRegister_instance._register_dependent(fake_dependent, fake_resource_name)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_dependent(
+                mock_DependencyRegister_instance, fake_dependent, fake_resource_name)
 
     def test__giving_dependent_not_in_dependents__should_add_dependent(
             self, DependencyRegister_instance, fake_resource_name, fake_dependent):
