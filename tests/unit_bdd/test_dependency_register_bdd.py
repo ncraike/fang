@@ -51,6 +51,14 @@ def given_the_method_under_test(
 def given_a_fake_dependent(code_under_test, fake_dependent):
     code_under_test['args'].append(fake_dependent)
 
+@given('I have a fake dependent not in dependents')
+def given_a_fake_dependent(
+        code_under_test, fake_dependent, mock_DependencyRegister_instance):
+    # Ensure that fake_dependent is not in instance.dependents
+    mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
+
+    code_under_test['args'].append(fake_dependent)
+
 @given('I have a fake resource name')
 def given_a_fake_resource_name(code_under_test, fake_resource_name):
     code_under_test['args'].append(fake_resource_name)
@@ -62,9 +70,15 @@ def call_the_method(code_under_test):
             code_under_test['args'],
             code_under_test['kwargs'])
 
-    to_call(*args, **kwargs)
+    result = to_call(*args, **kwargs)
+    code_under_test['result'] = result
 
 @then('the method call should succeed')
 @then('it should succeed')
 def should_succeed():
     pass
+
+@then('the fake dependent should be in dependents')
+def fake_dependent_should_be_in_dependents(
+        fake_dependent, mock_DependencyRegister_instance):
+    assert fake_dependent in mock_DependencyRegister_instance.dependents
