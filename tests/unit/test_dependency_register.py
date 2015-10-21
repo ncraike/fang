@@ -36,68 +36,99 @@ class Test_DependencyRegister__register_dependent:
                 mock_DependencyRegister_instance, fake_dependent, fake_resource_name)
 
     def test__giving_dependent_not_in_dependents__should_add_dependent(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_dependent is not in DependencyRegister_instance.dependents
-        DependencyRegister_instance.dependents.pop(fake_dependent, None)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_dependent is not in instance.dependents
+        mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
 
-        DependencyRegister_instance._register_dependent(fake_dependent, fake_resource_name)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_dependent(
+                mock_DependencyRegister_instance, fake_dependent, fake_resource_name)
 
-        assert fake_dependent in DependencyRegister_instance.dependents
+        assert fake_dependent in mock_DependencyRegister_instance.dependents
 
     def test__giving_dependent_not_in_dependents__should_add_resource_name(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_dependent is not in DependencyRegister_instance.dependents
-        DependencyRegister_instance.dependents.pop(fake_dependent, None)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_dependent is not in instance.dependents
+        mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
 
-        DependencyRegister_instance._register_dependent(fake_dependent, fake_resource_name)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_dependent(
+                mock_DependencyRegister_instance, fake_dependent, fake_resource_name)
 
-        assert fake_resource_name in DependencyRegister_instance.dependents[fake_dependent]
+        assert fake_resource_name in mock_DependencyRegister_instance.dependents[fake_dependent]
 
     def test__giving_dependent_in_dependents__should_add_resource_name(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_dependent is in DependencyRegister_instance.dependents
-        DependencyRegister_instance.dependents[fake_dependent] = []
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_dependent is in mock_DependencyRegister_instance.dependents
+        mock_DependencyRegister_instance.dependents[fake_dependent] = []
 
-        DependencyRegister_instance._register_dependent(fake_dependent, fake_resource_name)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_dependent(
+                mock_DependencyRegister_instance, fake_dependent, fake_resource_name)
 
-        assert fake_resource_name in DependencyRegister_instance.dependents[fake_dependent]
+        assert fake_resource_name in mock_DependencyRegister_instance.dependents[fake_dependent]
 
 class Test_DependencyRegister__register_resource_dependency:
 
     def test__giving_resource_name_and_dependent__should_succeed(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        DependencyRegister_instance._register_resource_dependency(
-                fake_resource_name, fake_dependent)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_resource_dependency(
+                mock_DependencyRegister_instance, fake_resource_name, fake_dependent)
 
     def test__giving_resource_name_not_in_resources__should_add_resource_name(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_resource_name is not in DependencyRegister_instance.resources
-        DependencyRegister_instance.resources.pop(fake_resource_name, None)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in mock_DependencyRegister_instance.resources
+        mock_DependencyRegister_instance.resources.pop(fake_resource_name, None)
 
-        DependencyRegister_instance._register_resource_dependency(
-                fake_resource_name, fake_dependent)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_resource_dependency(
+                mock_DependencyRegister_instance, fake_resource_name, fake_dependent)
 
-        assert fake_resource_name in DependencyRegister_instance.resources
+        assert fake_resource_name in mock_DependencyRegister_instance.resources
 
     def test__giving_resource_name_not_in_resources__should_add_dependent(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_resource_name is not in DependencyRegister_instance.resources
-        DependencyRegister_instance.resources.pop(fake_resource_name, None)
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in mock_DependencyRegister_instance.resources
+        mock_DependencyRegister_instance.resources.pop(fake_resource_name, None)
 
-        DependencyRegister_instance._register_resource_dependency(
-                fake_resource_name, fake_dependent)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_resource_dependency(
+                mock_DependencyRegister_instance, fake_resource_name, fake_dependent)
 
-        assert fake_dependent in DependencyRegister_instance.resources[fake_resource_name]
+        assert fake_dependent in mock_DependencyRegister_instance.resources[fake_resource_name]
 
     def test__giving_resource_name_in_resources__should_add_dependent(
-            self, DependencyRegister_instance, fake_resource_name, fake_dependent):
-        # Ensure that fake_resource_name is not in DependencyRegister_instance.resources
-        DependencyRegister_instance.resources[fake_resource_name] = set()
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+        # Ensure that fake_resource_name is not in mock_DependencyRegister_instance.resources
+        mock_DependencyRegister_instance.resources[fake_resource_name] = set()
 
-        DependencyRegister_instance._register_resource_dependency(
-                fake_resource_name, fake_dependent)
+        # Method under test
+        #
+        # We call the method on the class, not an instance, so we can
+        # give a mock instance as 'self'
+        result = DependencyRegister._register_resource_dependency(
+                mock_DependencyRegister_instance, fake_resource_name, fake_dependent)
 
-        assert fake_dependent in DependencyRegister_instance.resources[fake_resource_name]
+        assert fake_dependent in mock_DependencyRegister_instance.resources[fake_resource_name]
 
 class Test_DependencyRegister_register:
 
