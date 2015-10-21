@@ -133,7 +133,7 @@ class Test_DependencyRegister__register_resource_dependency:
 class Test_DependencyRegister_register:
 
     def test__giving_None_for_dependent__should_return_partial_of_register(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name):
+            self, mock_DependencyRegister_instance, fake_resource_name):
 
         # Method under test
         #
@@ -148,7 +148,7 @@ class Test_DependencyRegister_register:
         assert result.args == (fake_resource_name,)
 
     def test__giving_None_for_dependent__should_not_call_any_methods(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name):
+            self, mock_DependencyRegister_instance, fake_resource_name):
 
         # Method under test
         #
@@ -171,7 +171,7 @@ class Test_DependencyRegister_register:
                 expected_methods_names))
 
     def test__giving_resource_name_and_dependent__should_call_self__unwrap_dependent(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
 
         # Method under test
         #
@@ -184,7 +184,7 @@ class Test_DependencyRegister_register:
         mock_DependencyRegister_instance._unwrap_dependent.assert_called_with(fake_dependent)
 
     def test__giving_resource_name_and_dependent__should_return_unwrapped_dependent(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
 
         # Method under test
         #
@@ -197,7 +197,7 @@ class Test_DependencyRegister_register:
         assert result == mock_DependencyRegister_instance._unwrap_dependent.return_value
 
     def test__giving_resource_name_and_dependent__should_call_self__register_dependent(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
 
         # Method under test
         #
@@ -213,7 +213,7 @@ class Test_DependencyRegister_register:
                 unwrapped_dependent, fake_resource_name)
 
     def test__giving_resource_name_and_dependent__should_call_self__register_resource_dependency(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
 
         # Method under test
         #
@@ -229,7 +229,7 @@ class Test_DependencyRegister_register:
                 fake_resource_name, unwrapped_dependent)
 
     def test__giving_resource_name_and_dependent__should_only_call_expected_methods(
-            self, DependencyRegister_instance, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
+            self, mock_DependencyRegister_instance, fake_resource_name, fake_dependent):
         # Method under test
         #
         # We call the method on the class, not an instance, so we can
