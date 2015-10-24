@@ -95,7 +95,6 @@ def call_the_method(call_under_test, request, arg_lines=''):
     result = to_call(*args, **kwargs)
     call_under_test['result'] = result
 
-@then('the method call should succeed')
 @then('it should succeed')
 def should_succeed():
     pass
