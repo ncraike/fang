@@ -97,3 +97,9 @@ def should_succeed():
 def fake_dependent_should_be_in_dependents(
         fake_dependent, mock_DependencyRegister_instance):
     assert fake_dependent in mock_DependencyRegister_instance.dependents
+
+@then('the fake resource name should be registered for the dependent')
+def fake_resource_name_should_be_registered_for_dependent(
+        fake_resource_name, fake_dependent, mock_DependencyRegister_instance):
+    assert (fake_resource_name in
+            mock_DependencyRegister_instance.dependents[fake_dependent])

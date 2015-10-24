@@ -14,3 +14,10 @@ Scenario: Registering for a dependent not in dependents, dependent should be add
         a fake dependent not in dependents
         a fake resource name
     Then the fake dependent should be in dependents
+
+Scenario: Registering for a dependent not in dependents, resource should be added
+    Given I am testing the _register_dependent method of DependencyRegister
+    When I call the method with:
+        a fake dependent not in dependents
+        a fake resource name
+    Then the fake resource name should be registered for the dependent
