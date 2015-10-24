@@ -53,6 +53,13 @@ def fake_dependent_not_in_dependents(
     mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
     return fake_dependent
 
+@pytest.fixture
+def fake_dependent_in_dependents(
+        call_under_test, fake_dependent, mock_DependencyRegister_instance):
+    # Ensure that fake_dependent is in instance.dependents
+    mock_DependencyRegister_instance.dependents[fake_dependent] = []
+    return fake_dependent
+
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(
@@ -62,10 +69,10 @@ def given_the_method_under_test(
     call_under_test['args'].append(mock_DependencyRegister_instance)
 
 ARG_LINES = {
-        'a fake dependent': 'fake_dependent',
-        'a fake dependent not in dependents':
-            'fake_dependent_not_in_dependents',
-        'a fake resource name': 'fake_resource_name',
+    'a fake dependent': 'fake_dependent',
+    'a fake dependent not in dependents': 'fake_dependent_not_in_dependents',
+    'a fake dependent in dependents': 'fake_dependent_in_dependents',
+    'a fake resource name': 'fake_resource_name',
 }
 
 def resolve_arg_lines(lines, request):
