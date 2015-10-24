@@ -16,15 +16,21 @@ from fang.dependency_register import DependencyRegister
 #
 scenarios('features/dependency_register/')
 
-@pytest.fixture()
-def code_under_test():
+@pytest.fixture
+def world_state():
     return {
-            'to_call': None,
-            'args': [],
-            'kwargs': {},
-            }
+            'call_under_test': {
+                'callable': None,
+                'args': [],
+                'kwargs': {},
+            },
+    }
 
-@pytest.fixture()
+@pytest.fixture
+def call_under_test(world_state):
+    return world_state['call_under_test']
+
+@pytest.fixture
 def mock_DependencyRegister_instance():
     mock_DependencyRegister_instance = unittest.mock.NonCallableMock(
             spec=DependencyRegister())
@@ -32,46 +38,55 @@ def mock_DependencyRegister_instance():
     mock_DependencyRegister_instance.resources = {}
     return mock_DependencyRegister_instance
 
-@pytest.fixture()
+@pytest.fixture
 def fake_resource_name():
     return 'fake resource name'
 
-@pytest.fixture()
+@pytest.fixture
 def fake_dependent():
     return 'fake dependent'
 
-@given(parsers.parse("I am testing the {method_name} method of DependencyRegister"))
-def given_the_method_under_test(
-        method_name, code_under_test, mock_DependencyRegister_instance):
-
-    code_under_test['to_call'] = getattr(DependencyRegister, method_name)
-    code_under_test['args'].append(mock_DependencyRegister_instance)
-
-@given('I have a fake dependent')
-def given_a_fake_dependent(code_under_test, fake_dependent):
-    code_under_test['args'].append(fake_dependent)
-
-@given('I have a fake dependent not in dependents')
-def given_a_fake_dependent(
-        code_under_test, fake_dependent, mock_DependencyRegister_instance):
+@pytest.fixture
+def fake_dependent_not_in_dependents(
+        call_under_test, fake_dependent, mock_DependencyRegister_instance):
     # Ensure that fake_dependent is not in instance.dependents
     mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
+    return fake_dependent
 
-    code_under_test['args'].append(fake_dependent)
+@given(parsers.parse(
+    "I am testing the {method_name} method of DependencyRegister"))
+def given_the_method_under_test(
+        method_name, call_under_test, mock_DependencyRegister_instance):
 
-@given('I have a fake resource name')
-def given_a_fake_resource_name(code_under_test, fake_resource_name):
-    code_under_test['args'].append(fake_resource_name)
+    call_under_test['callable'] = getattr(DependencyRegister, method_name)
+    call_under_test['args'].append(mock_DependencyRegister_instance)
+
+ARG_LINES = {
+        'a fake dependent': 'fake_dependent',
+        'a fake dependent not in dependents':
+            'fake_dependent_not_in_dependents',
+        'a fake resource name': 'fake_resource_name',
+}
+
+def resolve_arg_lines(lines, request):
+    return [
+            request.getfuncargvalue(ARG_LINES[line])
+            for line in lines.splitlines()]
 
 @when('I call the method')
-def call_the_method(code_under_test):
+@when(parsers.parse(
+    'I call the method with:\n{arg_lines}'))
+def call_the_method(call_under_test, request, arg_lines=''):
     to_call, args, kwargs = (
-            code_under_test['to_call'],
-            code_under_test['args'],
-            code_under_test['kwargs'])
+            call_under_test['callable'],
+            call_under_test['args'],
+            call_under_test['kwargs'])
+
+    more_args = resolve_arg_lines(arg_lines, request)
+    args.extend(more_args)
 
     result = to_call(*args, **kwargs)
-    code_under_test['result'] = result
+    call_under_test['result'] = result
 
 @then('the method call should succeed')
 @then('it should succeed')
