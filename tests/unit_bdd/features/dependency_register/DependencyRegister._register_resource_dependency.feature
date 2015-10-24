@@ -4,7 +4,7 @@ Feature: DependencyRegister._register_resource_dependency
 Background:
     Given I am testing the _register_resource_dependency method of DependencyRegister
 
-Scenario: Giving a dependent and a resource name
+Scenario: Giving resource name and a dependent
     When I call the method with:
         a fake resource name
         a fake dependent
