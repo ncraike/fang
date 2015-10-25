@@ -9,3 +9,8 @@ Scenario: Giving resource name and a dependent
         a fake resource name
         a fake dependent
     Then it should succeed
+
+Scenario: Registering a resource name not in resources, resource should be added
+    When I call the method with:
+        a fake resource name not in resources
+        a fake dependent
