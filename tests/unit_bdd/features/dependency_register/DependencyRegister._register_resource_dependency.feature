@@ -21,3 +21,9 @@ Scenario: Registering a resource name not in resources, dependent should be adde
         a fake resource name not in resources
         a fake dependent
     Then the fake dependent should be registered as needing the fake resource
+
+Scenario: Registering for a resource already in resources, dependent should be added
+    When I call the method with:
+        a fake resource name in resources
+        a fake dependent
+    Then the fake dependent should be registered as needing the fake resource

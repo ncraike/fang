@@ -67,6 +67,13 @@ def fake_resource_name_not_in_resources(
     mock_DependencyRegister_instance.resources.pop(fake_resource_name, None)
     return fake_resource_name
 
+@pytest.fixture
+def fake_resource_name_in_resources(
+        call_under_test, fake_resource_name, mock_DependencyRegister_instance):
+    # Ensure that fake_resource_name is in instance.resources
+    mock_DependencyRegister_instance.resources[fake_resource_name] = set()
+    return fake_resource_name
+
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(
@@ -81,6 +88,7 @@ ARG_LINES = {
     'a fake dependent in dependents': 'fake_dependent_in_dependents',
     'a fake resource name': 'fake_resource_name',
     'a fake resource name not in resources': 'fake_resource_name_not_in_resources',
+    'a fake resource name in resources': 'fake_resource_name_in_resources',
 }
 
 def resolve_arg_lines(lines, request):
