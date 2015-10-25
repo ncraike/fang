@@ -123,3 +123,8 @@ def fake_resource_name_should_be_in_resources(
         fake_resource_name, mock_DependencyRegister_instance):
     assert fake_resource_name in mock_DependencyRegister_instance.resources
 
+@then('the fake dependent should be registered as needing the fake resource')
+def fake_dependent_should_be_registered_as_needing_the_fake_resource(
+        fake_resource_name, fake_dependent, mock_DependencyRegister_instance):
+    assert (fake_dependent in
+            mock_DependencyRegister_instance.resources[fake_resource_name])
