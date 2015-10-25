@@ -14,3 +14,4 @@ Scenario: Registering a resource name not in resources, resource should be added
     When I call the method with:
         a fake resource name not in resources
         a fake dependent
+    Then the fake resource name should be in resources
