@@ -23,6 +23,7 @@ def world_state():
                 'callable': None,
                 'args': [],
                 'kwargs': {},
+                'callable_on_instance': None,
             },
     }
 
@@ -74,6 +75,10 @@ def fake_resource_name_in_resources(
     mock_DependencyRegister_instance.resources[fake_resource_name] = set()
     return fake_resource_name
 
+@pytest.fixture
+def a_None_value():
+    return None
+
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(
@@ -81,14 +86,18 @@ def given_the_method_under_test(
 
     call_under_test['callable'] = getattr(DependencyRegister, method_name)
     call_under_test['args'].append(mock_DependencyRegister_instance)
+    call_under_test['callable_on_instance'] = getattr(
+            mock_DependencyRegister_instance, method_name)
 
 ARG_LINES = {
     'a fake dependent': 'fake_dependent',
     'a fake dependent not in dependents': 'fake_dependent_not_in_dependents',
     'a fake dependent in dependents': 'fake_dependent_in_dependents',
     'a fake resource name': 'fake_resource_name',
+    'the fake resource name': 'fake_resource_name',
     'a fake resource name not in resources': 'fake_resource_name_not_in_resources',
     'a fake resource name in resources': 'fake_resource_name_in_resources',
+    'a None value': 'a_None_value',
 }
 
 def resolve_arg_lines(lines, request):
@@ -136,3 +145,21 @@ def fake_dependent_should_be_registered_as_needing_the_fake_resource(
         fake_resource_name, fake_dependent, mock_DependencyRegister_instance):
     assert (fake_dependent in
             mock_DependencyRegister_instance.resources[fake_resource_name])
+
+@then('the result should be a partial')
+def result_should_be_a_partial(call_under_test):
+    result = call_under_test['result']
+    assert isinstance(result, functools.partial)
+
+@then("the resulting partial's function should be the method")
+def resulting_partials_func_should_be_a_method(call_under_test):
+    result = call_under_test['result']
+    # This is kind of weird, because we actually expect the method on
+    # the mock instance, even though we called the method on the class
+    assert result.func == call_under_test['callable_on_instance']
+
+@then(parsers.parse("the resulting partial's arguments should be:\n{arg_lines}"))
+def resulting_partials_func_should_be_a_method(arg_lines, call_under_test, request):
+    result = call_under_test['result']
+    expected_args = tuple(resolve_arg_lines(arg_lines, request))
+    assert result.args == expected_args
