@@ -24,7 +24,8 @@ def world_state():
                 'args': [],
                 'kwargs': {},
                 'callable_on_instance': None,
-            },
+                },
+            'instance': None,
     }
 
 @pytest.fixture
@@ -82,12 +83,13 @@ def a_None_value():
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(
-        method_name, call_under_test, mock_DependencyRegister_instance):
+        method_name, call_under_test, world_state, mock_DependencyRegister_instance):
 
     call_under_test['callable'] = getattr(DependencyRegister, method_name)
     call_under_test['args'].append(mock_DependencyRegister_instance)
     call_under_test['callable_on_instance'] = getattr(
             mock_DependencyRegister_instance, method_name)
+    world_state['instance'] = mock_DependencyRegister_instance
 
 ARG_LINES = {
     'a fake dependent': 'fake_dependent',
@@ -163,3 +165,23 @@ def resulting_partials_func_should_be_a_method(arg_lines, call_under_test, reque
     result = call_under_test['result']
     expected_args = tuple(resolve_arg_lines(arg_lines, request))
     assert result.args == expected_args
+
+def give_unexpected_calls(method_calls, expected_methods_names):
+    return [call for call in method_calls
+            if call[0] not in expected_methods_names]
+
+@then('no other methods should be called')
+def no_methods_should_be_called(world_state):
+    return expected_methods_should_be_called([], world_state)
+
+def expected_methods_should_be_called(expected_methods_names, world_state):
+    instance = world_state['instance']
+    unexpected_calls = give_unexpected_calls(
+            instance.method_calls, expected_methods_names)
+    assert unexpected_calls == [], (
+            'Unexpected methods called: {!r} \n'
+            'Called methods: {!r} \n'
+            'Expected method names: {!r}'.format(
+            unexpected_calls,
+            instance.method_calls,
+            expected_methods_names))
