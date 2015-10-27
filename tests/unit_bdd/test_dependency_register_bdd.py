@@ -172,9 +172,9 @@ def give_unexpected_calls(method_calls, expected_methods_names):
 
 @then('no other methods should be called')
 def no_methods_should_be_called(world_state):
-    return expected_methods_should_be_called([], world_state)
+    return only_expected_methods_should_be_called([], world_state)
 
-def expected_methods_should_be_called(expected_methods_names, world_state):
+def only_expected_methods_should_be_called(expected_methods_names, world_state):
     instance = world_state['instance']
     unexpected_calls = give_unexpected_calls(
             instance.method_calls, expected_methods_names)
