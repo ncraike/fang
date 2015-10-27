@@ -18,3 +18,10 @@ Scenario: Calling with dependent as None (should not call any methods)
         a fake resource name
         a None value
     Then no other methods should be called
+
+Scenario: Calling with resource name and dependent (should call _unwrap_dependent)
+    When I call the method with:
+        a fake resource name
+        a fake dependent
+    Then I expect the method _unwrap_dependent to be called with:
+        a fake dependent

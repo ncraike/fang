@@ -185,3 +185,12 @@ def only_expected_methods_should_be_called(expected_methods_names, world_state):
             unexpected_calls,
             instance.method_calls,
             expected_methods_names))
+
+@then(parsers.parse(
+    'I expect the method {method_name} to be called with:\n{arg_lines}'))
+def expect_method_to_be_called_with_args(
+        method_name, arg_lines, world_state, request):
+    expected_method_called = getattr(world_state['instance'], method_name)
+    expected_args = resolve_arg_lines(arg_lines, request)
+
+    expected_method_called.assert_called_with(*expected_args)
