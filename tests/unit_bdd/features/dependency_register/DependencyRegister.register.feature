@@ -25,3 +25,9 @@ Scenario: Calling with resource name and dependent (should call _unwrap_dependen
         a fake dependent
     Then the method _unwrap_dependent should be called with:
         a fake dependent
+
+Scenario: Calling with resource name and dependent (should return unwrapped dependent)
+    When I call the method with:
+        a fake resource name
+        a fake dependent
+    Then the result should be the return value of method _unwrap_dependent

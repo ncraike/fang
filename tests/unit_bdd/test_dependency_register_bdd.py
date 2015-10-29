@@ -194,3 +194,9 @@ def method_should_be_called_with_args(
     expected_args = resolve_arg_lines(arg_lines, request)
 
     expected_method_called.assert_called_with(*expected_args)
+
+@then(parsers.parse(
+    'the result should be the return value of method {method_name}'))
+def result_should_be_return_value_of(method_name, world_state, call_under_test):
+    method = getattr(world_state['instance'], method_name)
+    assert call_under_test['result'] == method.return_value
