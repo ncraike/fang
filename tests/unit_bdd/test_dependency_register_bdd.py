@@ -130,6 +130,13 @@ def fake_resource_name_in_resources(
 def a_None_value():
     return None
 
+@argument_line(parsers.parse(
+    'the return value of method {method_name}'))
+def the_return_value_of_mock_method(method_name, pytest_request=None):
+    world_state = pytest_request.getfuncargvalue('world_state')
+    method = getattr(world_state['instance'], method_name)
+    return method.return_value
+
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(

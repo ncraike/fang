@@ -31,3 +31,11 @@ Scenario: Calling with resource name and dependent (should return unwrapped depe
         a fake resource name
         a fake dependent
     Then the result should be the return value of method _unwrap_dependent
+
+Scenario: Calling with resource name and dependent (should call _register_dependent)
+    When I call the method with:
+        a fake resource name
+        a fake dependent
+    Then the method _register_dependent should be called with:
+        the return value of method _unwrap_dependent
+        a fake resource name
