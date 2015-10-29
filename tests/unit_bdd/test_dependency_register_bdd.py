@@ -24,6 +24,7 @@ def world_state():
                 'args': [],
                 'kwargs': {},
                 'callable_on_instance': None,
+                'result': 'NO RESULT YET',
                 },
             'instance': None,
     }
