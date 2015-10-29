@@ -23,5 +23,5 @@ Scenario: Calling with resource name and dependent (should call _unwrap_dependen
     When I call the method with:
         a fake resource name
         a fake dependent
-    Then I expect the method _unwrap_dependent to be called with:
+    Then the method _unwrap_dependent should be called with:
         a fake dependent
