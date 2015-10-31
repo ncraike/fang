@@ -16,6 +16,55 @@ from fang.dependency_register import DependencyRegister
 #
 scenarios('features/dependency_register/')
 
+ARGUMENTS = []
+
+def give_argument_value_from_parsing_line(
+        argument_line, parser, get_argument_value_func,
+        **kwargs_for_arg_factories):
+    '''
+    This asks the given function for the argument value based on the
+    argument line.
+
+    The function is given the dictionary of matches from the
+    parser, which it may use to create the argument value.
+    '''
+    matches = parser.parse_arguments(argument_line)
+    kwargs_for_arg_factories.update(matches)
+    return get_argument_value_func(**kwargs_for_arg_factories)
+
+
+def register_argument(pattern_or_parser, get_argument_value_func):
+    parser = parsers.get_parser(pattern_or_parser)
+    give_argument_value = functools.partial(
+            give_argument_value_from_parsing_line,
+            parser=parser,
+            get_argument_value_func=get_argument_value_func)
+
+    argument_entry = (parser.is_matching, give_argument_value)
+    ARGUMENTS.append(argument_entry)
+
+# For use as decorator
+def argument_line(pattern_or_parser):
+    def decorator(decorated_func):
+        register_argument(pattern_or_parser, decorated_func)
+        return decorated_func
+    return decorator
+
+def get_argument_from_registered(argument_line, **kwargs_for_arg_factories):
+    for (is_matching, give_argument_value) in ARGUMENTS:
+        if is_matching(argument_line):
+            return give_argument_value(
+                    argument_line, **kwargs_for_arg_factories)
+    else:
+        raise Exception(
+                "Couldn't find a match for argument line: {!r}".format(
+                    argument_line))
+
+def parse_argument_lines(lines, **kwargs_for_arg_factories):
+    return [
+            get_argument_from_registered(line, **kwargs_for_arg_factories)
+            for line in lines]
+
 @pytest.fixture
 def world_state():
     return {
@@ -104,9 +153,17 @@ ARG_LINES = {
 }
 
 def resolve_arg_lines(lines, request):
-    return [
-            request.getfuncargvalue(ARG_LINES[line])
-            for line in lines.splitlines()]
+    results = []
+    for line in lines.splitlines():
+        # Old system
+        if line in ARG_LINES:
+            results.append(request.getfuncargvalue(ARG_LINES[line]))
+        # New system
+        else:
+            result = get_argument_from_registered(line, pytest_request=request)
+            results.append(result)
+
+    return results
 
 @when('I call the method')
 @when(parsers.parse(
