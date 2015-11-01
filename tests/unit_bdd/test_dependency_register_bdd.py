@@ -91,43 +91,59 @@ def mock_DependencyRegister_instance():
     return mock_DependencyRegister_instance
 
 @pytest.fixture
-def fake_resource_name():
+@argument_line('a fake resource name')
+@argument_line('the fake resource name')
+def fake_resource_name(**kwargs):
     return 'fake resource name'
 
 @pytest.fixture
-def fake_dependent():
+@argument_line('a fake dependent')
+def fake_dependent(**kwargs):
     return 'fake dependent'
 
-@pytest.fixture
-def fake_dependent_not_in_dependents(
-        call_under_test, fake_dependent, mock_DependencyRegister_instance):
+@argument_line('a fake dependent not in dependents')
+def fake_dependent_not_in_dependents(pytest_request, **kwargs):
+    call_under_test, fake_dependent, mock_DependencyRegister_instance = (
+        pytest_request.getfuncargvalue('call_under_test'),
+        pytest_request.getfuncargvalue('fake_dependent'),
+        pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is not in instance.dependents
     mock_DependencyRegister_instance.dependents.pop(fake_dependent, None)
     return fake_dependent
 
-@pytest.fixture
-def fake_dependent_in_dependents(
-        call_under_test, fake_dependent, mock_DependencyRegister_instance):
+@argument_line('a fake dependent in dependents')
+def fake_dependent_in_dependents(pytest_request, **kwargs):
+    call_under_test, fake_dependent, mock_DependencyRegister_instance = (
+            pytest_request.getfuncargvalue('call_under_test'),
+            pytest_request.getfuncargvalue('fake_dependent'),
+            pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is in instance.dependents
     mock_DependencyRegister_instance.dependents[fake_dependent] = []
     return fake_dependent
 
-@pytest.fixture
-def fake_resource_name_not_in_resources(
-        call_under_test, fake_resource_name, mock_DependencyRegister_instance):
+@argument_line('a fake resource name not in resources')
+def fake_resource_name_not_in_resources(pytest_request, **kwargs):
+    call_under_test, fake_resource_name, mock_DependencyRegister_instance = (
+            pytest_request.getfuncargvalue('call_under_test'),
+            pytest_request.getfuncargvalue('fake_resource_name'),
+            pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_resource_name is not in instance.resources
     mock_DependencyRegister_instance.resources.pop(fake_resource_name, None)
     return fake_resource_name
 
-@pytest.fixture
-def fake_resource_name_in_resources(
-        call_under_test, fake_resource_name, mock_DependencyRegister_instance):
+@argument_line('a fake resource name in resources')
+def fake_resource_name_in_resources(pytest_request, **kwargs):
+    call_under_test, fake_resource_name, mock_DependencyRegister_instance = (
+            pytest_request.getfuncargvalue('call_under_test'),
+            pytest_request.getfuncargvalue('fake_resource_name'),
+            pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_resource_name is in instance.resources
     mock_DependencyRegister_instance.resources[fake_resource_name] = set()
     return fake_resource_name
 
 @pytest.fixture
-def a_None_value():
+@argument_line('a None value')
+def a_None_value(**kwargs):
     return None
 
 @argument_line(parsers.parse(
@@ -148,29 +164,9 @@ def given_the_method_under_test(
             mock_DependencyRegister_instance, method_name)
     world_state['instance'] = mock_DependencyRegister_instance
 
-ARG_LINES = {
-    'a fake dependent': 'fake_dependent',
-    'a fake dependent not in dependents': 'fake_dependent_not_in_dependents',
-    'a fake dependent in dependents': 'fake_dependent_in_dependents',
-    'a fake resource name': 'fake_resource_name',
-    'the fake resource name': 'fake_resource_name',
-    'a fake resource name not in resources': 'fake_resource_name_not_in_resources',
-    'a fake resource name in resources': 'fake_resource_name_in_resources',
-    'a None value': 'a_None_value',
-}
-
 def resolve_arg_lines(lines, request):
-    results = []
-    for line in lines.splitlines():
-        # Old system
-        if line in ARG_LINES:
-            results.append(request.getfuncargvalue(ARG_LINES[line]))
-        # New system
-        else:
-            result = get_argument_from_registered(line, pytest_request=request)
-            results.append(result)
-
-    return results
+    return [get_argument_from_registered(line, pytest_request=request)
+            for line in lines.splitlines()]
 
 @when('I call the method')
 @when(parsers.parse(
