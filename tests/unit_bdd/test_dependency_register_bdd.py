@@ -16,7 +16,7 @@ from fang.dependency_register import DependencyRegister
 #
 scenarios('features/dependency_register/')
 
-ARGUMENTS = []
+arguments = []
 
 def give_argument_value_from_parsing_line(
         argument_line, parser, get_argument_value_func,
@@ -32,7 +32,6 @@ def give_argument_value_from_parsing_line(
     kwargs_for_arg_factories.update(matches)
     return get_argument_value_func(**kwargs_for_arg_factories)
 
-
 def register_argument(pattern_or_parser, get_argument_value_func):
     parser = parsers.get_parser(pattern_or_parser)
     give_argument_value = functools.partial(
@@ -41,7 +40,7 @@ def register_argument(pattern_or_parser, get_argument_value_func):
             get_argument_value_func=get_argument_value_func)
 
     argument_entry = (parser.is_matching, give_argument_value)
-    ARGUMENTS.append(argument_entry)
+    arguments.append(argument_entry)
 
 # For use as decorator
 def argument_line(pattern_or_parser):
@@ -51,7 +50,7 @@ def argument_line(pattern_or_parser):
     return decorator
 
 def get_argument_from_registered(argument_line, **kwargs_for_arg_factories):
-    for (is_matching, give_argument_value) in ARGUMENTS:
+    for (is_matching, give_argument_value) in arguments:
         if is_matching(argument_line):
             return give_argument_value(
                     argument_line, **kwargs_for_arg_factories)
