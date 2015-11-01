@@ -232,9 +232,16 @@ def give_unexpected_calls(method_calls, expected_methods_names):
 
 @then('no other methods should be called')
 def no_methods_should_be_called(world_state):
-    return only_expected_methods_should_be_called([], world_state)
+    return assert_only_expected_methods_called([], world_state)
 
-def only_expected_methods_should_be_called(expected_methods_names, world_state):
+@then(parsers.parse(
+    "only these methods should be called:\n{method_name_lines}"))
+def only_these_methods_should_be_called(method_name_lines, world_state):
+    return assert_only_expected_methods_called(
+            method_name_lines.splitlines(),
+            world_state)
+
+def assert_only_expected_methods_called(expected_methods_names, world_state):
     instance = world_state['instance']
     unexpected_calls = give_unexpected_calls(
             instance.method_calls, expected_methods_names)
