@@ -72,6 +72,9 @@ def world_state():
                 'args': [],
                 'kwargs': {},
                 'callable_on_instance': None,
+                'special_options': {
+                    'ignore_exceptions': False,
+                },
                 'result': 'NO RESULT YET',
                 },
             'instance': None,
@@ -165,6 +168,10 @@ def resolve_arg_lines(lines, request):
     return [get_argument_from_registered(line, pytest_request=request)
             for line in lines.splitlines()]
 
+@given('I am ignoring all exceptions during the method call')
+def ignoring_exceptions_during_method_call(call_under_test):
+    call_under_test['special_options']['ignore_exceptions'] = True
+
 @when('I call the method')
 @when(parsers.parse(
     'I call the method with:\n{arg_lines}'))
@@ -177,8 +184,16 @@ def call_the_method(call_under_test, request, arg_lines=''):
     more_args = resolve_arg_lines(arg_lines, request)
     args.extend(more_args)
 
-    result = to_call(*args, **kwargs)
-    call_under_test['result'] = result
+    if call_under_test['special_options']['ignore_exceptions']:
+        try:
+            result = to_call(*args, **kwargs)
+            call_under_test['result'] = result
+        except:
+            call_under_test['result'] = "EXCEPTION OCCURRED"
+
+    else:
+        result = to_call(*args, **kwargs)
+        call_under_test['result'] = result
 
 @then('it should succeed')
 def should_succeed():
