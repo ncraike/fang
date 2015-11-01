@@ -102,8 +102,7 @@ def fake_dependent(**kwargs):
 
 @argument_line('a fake dependent not in dependents')
 def fake_dependent_not_in_dependents(pytest_request, **kwargs):
-    call_under_test, fake_dependent, mock_DependencyRegister_instance = (
-        pytest_request.getfuncargvalue('call_under_test'),
+    fake_dependent, mock_DependencyRegister_instance = (
         pytest_request.getfuncargvalue('fake_dependent'),
         pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is not in instance.dependents
@@ -112,8 +111,7 @@ def fake_dependent_not_in_dependents(pytest_request, **kwargs):
 
 @argument_line('a fake dependent in dependents')
 def fake_dependent_in_dependents(pytest_request, **kwargs):
-    call_under_test, fake_dependent, mock_DependencyRegister_instance = (
-            pytest_request.getfuncargvalue('call_under_test'),
+    fake_dependent, mock_DependencyRegister_instance = (
             pytest_request.getfuncargvalue('fake_dependent'),
             pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is in instance.dependents
