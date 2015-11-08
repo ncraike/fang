@@ -1,10 +1,10 @@
-from pytest_bdd import scenario, scenarios, given, when, then, parsers
 
 import unittest.mock
 import functools
 from types import ModuleType
 
 import pytest
+from pytest_bdd import scenario, scenarios, given, when, then, parsers
 
 #
 # Module under test:
