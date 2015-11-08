@@ -6,6 +6,9 @@ from types import ModuleType
 import pytest
 from pytest_bdd import scenario, scenarios, given, when, then, parsers
 
+import fang.errors
+from utils import defers_when_steps
+
 #
 # Module under test:
 #
@@ -280,3 +283,11 @@ def method_should_be_called_with_args(
 def result_should_be_return_value_of(method_name, world_state, call_under_test):
     method = getattr(world_state['instance'], method_name)
     assert call_under_test['result'] == method.return_value
+
+@defers_when_steps
+@then(parsers.parse(
+    'the exception {exception_name} should be raised'))
+def exception_should_be_raised(exception_name, deferred_when_steps):
+    expected_exception = getattr(fang.errors, exception_name)
+    with pytest.raises(expected_exception):
+        deferred_when_steps()

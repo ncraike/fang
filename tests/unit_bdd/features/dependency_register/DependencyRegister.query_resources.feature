@@ -10,3 +10,8 @@ Scenario: Calling with dependent (should call _unwrap_dependent)
         a fake dependent
     Then the method _unwrap_dependent should be called with:
         a fake dependent
+
+Scenario: Calling with a dependent not in dependents
+    When I call the method with:
+        a fake dependent
+    Then the exception DependentNotFoundError should be raised
