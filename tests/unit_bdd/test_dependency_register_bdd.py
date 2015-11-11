@@ -117,11 +117,12 @@ def fake_dependent_not_in_dependents(pytest_request, **kwargs):
 
 @argument_line('a fake dependent in dependents')
 def fake_dependent_in_dependents(pytest_request, **kwargs):
-    fake_dependent, mock_DependencyRegister_instance = (
+    fake_dependent, fake_resource_name, mock_DependencyRegister_instance = (
             pytest_request.getfuncargvalue('fake_dependent'),
+            pytest_request.getfuncargvalue('fake_resource_name'),
             pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is in instance.dependents
-    mock_DependencyRegister_instance.dependents[fake_dependent] = []
+    mock_DependencyRegister_instance.dependents[fake_dependent] = [fake_resource_name]
     return fake_dependent
 
 @argument_line('a fake resource name not in resources')
@@ -297,3 +298,11 @@ def exception_should_be_raised(exception_name, deferred_when_steps):
     expected_exception = getattr(fang.errors, exception_name)
     with pytest.raises(expected_exception):
         deferred_when_steps()
+
+@then(parsers.parse(
+    'the result should contain:\n{arg_lines}'))
+def result_should_contain(arg_lines, call_under_test, request):
+    result = call_under_test['result']
+    items = resolve_arg_lines(arg_lines, request)
+    for item in items:
+        assert item in result
