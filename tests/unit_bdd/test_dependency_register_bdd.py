@@ -175,6 +175,12 @@ def resolve_arg_lines(lines, request):
 def ignoring_exceptions_during_method_call(call_under_test):
     call_under_test['special_options']['ignore_exceptions'] = True
 
+@given(parsers.parse(
+    "the method {method_name} will return its one argument unchanged"))
+def given_method_will_return_its_one_arg_unchanged(method_name, world_state):
+    instance = world_state['instance']
+    setattr(instance, method_name, lambda x: x)
+
 @when('I call the method')
 @when(parsers.parse(
     'I call the method with:\n{arg_lines}'))

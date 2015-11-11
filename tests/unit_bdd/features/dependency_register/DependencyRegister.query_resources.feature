@@ -12,6 +12,7 @@ Scenario: Calling with dependent (should call _unwrap_dependent)
         a fake dependent
 
 Scenario: Calling with a dependent not in dependents
+    Given the method _unwrap_dependent will return its one argument unchanged
     When I call the method with:
         a fake dependent not in dependents
     Then the exception DependentNotFoundError should be raised
