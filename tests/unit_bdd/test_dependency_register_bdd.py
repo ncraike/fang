@@ -96,6 +96,11 @@ def mock_DependencyRegister_instance():
     return mock_DependencyRegister_instance
 
 @pytest.fixture
+def mock_DependencyRegister_class():
+    return unittest.mock.Mock(
+            spec=DependencyRegister)
+
+@pytest.fixture
 @argument_line('a fake resource name')
 @argument_line('the fake resource name')
 def fake_resource_name(**kwargs):
@@ -124,6 +129,13 @@ def fake_dependent_in_dependents(pytest_request, **kwargs):
     # Ensure that fake_dependent is in instance.dependents
     mock_DependencyRegister_instance.dependents[fake_dependent] = [fake_resource_name]
     return fake_dependent
+
+class FakeDependentWhichIsAClass:
+    pass
+
+@argument_line('a fake dependent which is a class')
+def fake_dependent_which_is_a_class(pytest_request, **kwargs):
+    return FakeDependentWhichIsAClass
 
 @argument_line('a fake resource name not in resources')
 def fake_resource_name_not_in_resources(pytest_request, **kwargs):
@@ -167,6 +179,30 @@ def given_the_method_under_test(
     call_under_test['callable_on_instance'] = getattr(
             mock_DependencyRegister_instance, method_name)
     world_state['instance'] = mock_DependencyRegister_instance
+
+
+@given(parsers.parse(
+    "I am testing the {method_name} class-method of DependencyRegister"))
+def given_the_class_method_under_test(
+        method_name, call_under_test, world_state,
+        mock_DependencyRegister_instance):
+
+    # This unwraps the @classmethod decoration to reach the original
+    # function, so we can specify 'cls' as a mock of the
+    # DependencyRegister class.
+    unwrapped_class_method = getattr(
+            getattr(
+                DependencyRegister,
+                method_name),
+            '__func__')
+
+    call_under_test['callable'] = unwrapped_class_method
+    call_under_test['args'].append(mock_DependencyRegister_class)
+
+    call_under_test['callable_on_instance'] = (
+            'NOT VALID SINCE THIS IS A CLASS METHOD')
+    world_state['instance'] = (
+            'NOT VALID SINCE THIS IS A CLASS METHOD')
 
 def resolve_arg_lines(lines, request):
     return [get_argument_from_registered(line, pytest_request=request)
@@ -306,3 +342,12 @@ def result_should_contain(arg_lines, call_under_test, request):
     items = resolve_arg_lines(arg_lines, request)
     for item in items:
         assert item in result
+
+@then(parsers.parse(
+    'the result should be {one_arg}'))
+def result_should_be(one_arg, call_under_test, request):
+    result = call_under_test['result']
+    expected_result = get_argument_from_registered(
+            one_arg,
+            pytest_request=request)
+    assert result == expected_result
