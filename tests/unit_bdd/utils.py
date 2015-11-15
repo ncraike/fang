@@ -48,7 +48,6 @@ def defer_when_steps_if_needed(scenario, request):
                             when_step, scenario))
             scenario._steps.remove(when_step)
 
-
 def get_deferred_when_steps_callable(scenario, request):
 
     def run_when_steps():
