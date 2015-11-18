@@ -8,3 +8,9 @@ Scenario: Calling with class dependent
     When I call the method with:
         a fake dependent which is a class
     Then the result should be a fake dependent which is a class
+
+Scenario: Calling with non-class dependent (should call _unwrap_func)
+    When I call the method with:
+        a fake dependent
+    Then the method _unwrap_func should be called with:
+        a fake dependent
