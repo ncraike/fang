@@ -14,3 +14,8 @@ Scenario: Calling with non-class dependent (should call _unwrap_func)
         a fake dependent
     Then the method _unwrap_func should be called with:
         a fake dependent
+
+Scenario: Calling with non-class dependent (should return _unwrap_func result)
+    When I call the method with:
+        a fake dependent
+    Then the result should be the return value of method _unwrap_func
