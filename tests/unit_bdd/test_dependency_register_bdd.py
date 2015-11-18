@@ -199,10 +199,9 @@ def given_the_class_method_under_test(
     call_under_test['callable'] = unwrapped_class_method
     call_under_test['args'].append(mock_DependencyRegister_class)
 
-    call_under_test['callable_on_instance'] = (
-            'NOT VALID SINCE THIS IS A CLASS METHOD')
-    world_state['instance'] = (
-            'NOT VALID SINCE THIS IS A CLASS METHOD')
+    call_under_test['callable_on_instance'] = getattr(
+            mock_DependencyRegister_class, method_name)
+    world_state['instance'] = mock_DependencyRegister_class
 
 def resolve_arg_lines(lines, request):
     return [get_argument_from_registered(line, pytest_request=request)
