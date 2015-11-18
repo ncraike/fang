@@ -185,7 +185,7 @@ def given_the_method_under_test(
     "I am testing the {method_name} class-method of DependencyRegister"))
 def given_the_class_method_under_test(
         method_name, call_under_test, world_state,
-        mock_DependencyRegister_instance):
+        mock_DependencyRegister_class):
 
     # This unwraps the @classmethod decoration to reach the original
     # function, so we can specify 'cls' as a mock of the
