@@ -8,3 +8,9 @@ Scenario: Calling with an undecorated function
     When I call the method with:
         an undecorated function
     Then the result should be the undecorated function
+
+Scenario: Callling with a decorated function (should make recursive call)
+    When I call the method with:
+        a decorated function
+    Then the method _unwrap_func should be called with:
+        the undecorated function

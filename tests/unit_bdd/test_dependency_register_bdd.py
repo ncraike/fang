@@ -176,8 +176,26 @@ def _undecorated_function(*args, **kwargs):
     'an undecorated function'))
 @argument_line(parsers.parse(
     'the undecorated function'))
+@pytest.fixture
 def an_undecorated_function(pytest_request=None):
     return _undecorated_function
+
+def decorator(f):
+    @functools.wraps(f)
+    def decorator_wrapper(*args, **kwargs):
+        return (
+                'decorator_wrapper() added this',
+                f(*args, **kwargs))
+
+    return decorator_wrapper
+
+@argument_line(parsers.parse('a decorated function'))
+@argument_line(parsers.parse('the decorated function'))
+@pytest.fixture
+def a_decorated_function(pytest_request=None):
+    an_undecorated_function = pytest_request.getfuncargvalue(
+            'an_undecorated_function')
+    return decorator(an_undecorated_function)
 
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
