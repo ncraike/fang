@@ -190,7 +190,6 @@ def given_the_method_under_test(
             mock_DependencyRegister_instance, method_name)
     world_state['instance'] = mock_DependencyRegister_instance
 
-
 @given(parsers.parse(
     "I am testing the {method_name} class-method of DependencyRegister"))
 def given_the_class_method_under_test(
