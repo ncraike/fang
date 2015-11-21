@@ -169,6 +169,16 @@ def the_return_value_of_mock_method(method_name, pytest_request=None):
     method = getattr(world_state['instance'], method_name)
     return method.return_value
 
+def _undecorated_function(*args, **kwargs):
+    return ('undecorated_function() return value', args, kwargs)
+
+@argument_line(parsers.parse(
+    'an undecorated function'))
+@argument_line(parsers.parse(
+    'the undecorated function'))
+def an_undecorated_function(pytest_request=None):
+    return _undecorated_function
+
 @given(parsers.parse(
     "I am testing the {method_name} method of DependencyRegister"))
 def given_the_method_under_test(
