@@ -37,6 +37,7 @@ def fake_dependent():
 def undecorated_function():
     def undecorated_function(*args, **kwargs):
         return ('undecorated_function() return value', args, kwargs)
+    return undecorated_function
 
 @pytest.fixture(scope='function')
 def decorator():
