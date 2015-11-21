@@ -14,3 +14,8 @@ Scenario: Callling with a decorated function (should make recursive call)
         a decorated function
     Then the method _unwrap_func should be called with:
         the undecorated function
+
+Scenario: Callling with a decorated function (should return result of recursive call)
+    When I call the method with:
+        a decorated function
+    Then the result should be the return value of method _unwrap_func
