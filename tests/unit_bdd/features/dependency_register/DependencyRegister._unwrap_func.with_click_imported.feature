@@ -20,3 +20,9 @@ Scenario: Callling with a decorated function (should return result of recursive 
     When I call the method with:
         a decorated function
     Then the result should be the return value of method _unwrap_func
+
+Scenario: Callling with a click Command
+    When I call the method with:
+        a click Command
+    Then the method _unwrap_func should be called with:
+        the click Command's callback
