@@ -230,6 +230,16 @@ def given_the_class_method_under_test(
             mock_DependencyRegister_class, method_name)
     world_state['instance'] = mock_DependencyRegister_class
 
+@given("I am testing the creation of a new DependencyRegister instance")
+def given_testing_construction_of_DependencyRegister(
+        call_under_test, world_state):
+    call_under_test['callable'] = DependencyRegister
+
+    call_under_test['callable_on_instance'] = (
+            "NOT APPLICABLE WHEN WE'RE TESTING INSTANCE CONSTRUCTION")
+    world_state['instance'] = (
+            "NOT INITIALISED YET")
+
 def resolve_arg_lines(lines, request):
     return [get_argument_from_registered(line, pytest_request=request)
             for line in lines.splitlines()]
@@ -300,6 +310,25 @@ def call_the_method(call_under_test, request, arg_lines=''):
     else:
         result = to_call(*args, **kwargs)
         call_under_test['result'] = result
+
+@when('a new instance is created')
+def when_new_instance_created(call_under_test, world_state):
+    to_call, args, kwargs = (
+            call_under_test['callable'],
+            call_under_test['args'],
+            call_under_test['kwargs'])
+    if call_under_test['special_options']['ignore_exceptions']:
+        try:
+            result = to_call(*args, **kwargs)
+            call_under_test['result'] = result
+            world_state['instance'] = result
+        except:
+            call_under_test['result'] = "EXCEPTION OCCURRED"
+            world_state['instance'] = "EXCEPTION OCCURRED"
+    else:
+        result = to_call(*args, **kwargs)
+        call_under_test['result'] = result
+        world_state['instance'] = result
 
 @then('it should succeed')
 def should_succeed():
@@ -411,3 +440,9 @@ def result_should_be(one_arg, call_under_test, request):
             one_arg,
             pytest_request=request)
     assert result == expected_result
+
+@then(parsers.parse(
+    'the {attribute_name} attribute should be empty'))
+def attribute_should_be_empty(world_state, attribute_name):
+    attribute = getattr(world_state['instance'], attribute_name)
+    assert len(attribute) == 0
