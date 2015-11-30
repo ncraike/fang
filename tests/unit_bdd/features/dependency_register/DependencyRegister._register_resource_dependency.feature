@@ -6,24 +6,24 @@ Background:
 
 Scenario: Giving resource name and a dependent
     When I call the method with:
-        a fake resource name
-        a fake dependent
+        a resource name
+        a dependent
     Then it should succeed
 
 Scenario: Registering a resource name not in resources, resource should be added
     When I call the method with:
-        a fake resource name not in resources
-        a fake dependent
-    Then the fake resource name should be in resources
+        a resource name not in resources
+        a dependent
+    Then the resource name should be in resources
 
 Scenario: Registering a resource name not in resources, dependent should be added
     When I call the method with:
-        a fake resource name not in resources
-        a fake dependent
-    Then the fake dependent should be registered as needing the fake resource
+        a resource name not in resources
+        a dependent
+    Then the dependent should be registered as needing the resource
 
 Scenario: Registering for a resource already in resources, dependent should be added
     When I call the method with:
-        a fake resource name in resources
-        a fake dependent
-    Then the fake dependent should be registered as needing the fake resource
+        a resource name in resources
+        a dependent
+    Then the dependent should be registered as needing the resource

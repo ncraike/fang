@@ -6,16 +6,16 @@ Background:
 
 Scenario: Calling with class dependent
     When I call the method with:
-        a fake dependent which is a class
-    Then the result should be a fake dependent which is a class
+        a dependent which is a class
+    Then the result should be a dependent which is a class
 
 Scenario: Calling with non-class dependent (should call _unwrap_func)
     When I call the method with:
-        a fake dependent
+        a dependent
     Then the method _unwrap_func should be called with:
-        a fake dependent
+        a dependent
 
 Scenario: Calling with non-class dependent (should return _unwrap_func result)
     When I call the method with:
-        a fake dependent
+        a dependent
     Then the result should be the return value of method _unwrap_func
