@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from functools import partial
 
 from .errors import (
@@ -6,7 +7,7 @@ from .errors import (
         ProviderAlreadyRegisteredError,
         ProviderNotFoundError)
 
-class ResourceProviderRegister:
+class ResourceProviderRegister(object):
     def __init__(self, namespace=None):
         self.namespace = namespace
         # Maps resource names to a provider
@@ -47,14 +48,14 @@ class ResourceProviderRegister:
 
     def load(self, other_register, allow_overrides=False):
         if not allow_overrides:
-            own_keys = self.resource_providers.keys()
+            own_keys = set(self.resource_providers)
             other_keys = other_register.resource_providers.keys()
-            common_keys = own_keys & other_keys
+            common_keys = own_keys.intersection(other_keys)
             if common_keys:
                 # TODO Add new FangError sub-class?
                 raise FangError(
-                        'This register already has providers for keys: '
-                        '{!r}'.format(common_keys))
+                        u'This register already has providers for keys: '
+                        u'{!r}'.format(common_keys))
 
         self.resource_providers.update(
                 other_register.resource_providers)

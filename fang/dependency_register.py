@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from functools import partial
 import inspect
 
@@ -10,7 +11,7 @@ except ImportError:
     click = None
 
 
-class DependencyRegister:
+class DependencyRegister(object):
     def __init__(self):
         # Maps dependents to names of resources they require
         self.dependents = {}
@@ -19,7 +20,7 @@ class DependencyRegister:
 
     @classmethod
     def _unwrap_func(cls, decorated_func):
-        '''
+        u'''
         This unwraps a decorated func, returning the inner wrapped func.
 
         This may become unnecessary with Python 3.4's inspect.unwrap().
@@ -30,7 +31,7 @@ class DependencyRegister:
             if isinstance(decorated_func, click.Command):
                 return cls._unwrap_func(decorated_func.callback)
 
-        if hasattr(decorated_func, '__wrapped__'):
+        if hasattr(decorated_func, u'__wrapped__'):
             # Recursion: unwrap more if needed
             return cls._unwrap_func(decorated_func.__wrapped__)
         else:

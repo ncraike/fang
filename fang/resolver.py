@@ -1,9 +1,10 @@
 
+from __future__ import absolute_import
 from .errors import ProviderNotFoundError
 
 # This is effectively what is sometimes termed a "dependency injection
 # container".
-class DependencyResolver:
+class DependencyResolver(object):
 
     def __init__(
             self,
@@ -38,7 +39,7 @@ class DependencyResolver:
         for resource_name in self.query_dependents_resources(dependent):
             try:
                 self.resolve(resource_name)
-            except ProviderNotFoundError as e:
+            except ProviderNotFoundError, e:
                 # TODO: Add error logging here
                 return False
         else:

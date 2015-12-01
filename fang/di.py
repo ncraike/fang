@@ -1,9 +1,10 @@
 
+from __future__ import absolute_import
 from .dependency_register import DependencyRegister
 from .resource_provider_register import ResourceProviderRegister
 from .resolver import DependencyResolver
 
-class Di:
+class Di(object):
     
     def __init__(self, namespace=None):
         self.namespace = namespace
