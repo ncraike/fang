@@ -172,10 +172,8 @@ def the_return_value_of_mock_method(method_name, pytest_request=None):
 def _undecorated_function(*args, **kwargs):
     return ('undecorated_function() return value', args, kwargs)
 
-@argument_line(parsers.parse(
-    'an undecorated function'))
-@argument_line(parsers.parse(
-    'the undecorated function'))
+@argument_line('an undecorated function')
+@argument_line('the undecorated function')
 @pytest.fixture
 def an_undecorated_function(pytest_request=None):
     return _undecorated_function
@@ -189,8 +187,8 @@ def decorator(f):
 
     return decorator_wrapper
 
-@argument_line(parsers.parse('a decorated function'))
-@argument_line(parsers.parse('the decorated function'))
+@argument_line('a decorated function')
+@argument_line('the decorated function')
 @pytest.fixture
 def a_decorated_function(pytest_request=None):
     an_undecorated_function = pytest_request.getfuncargvalue(
