@@ -13,12 +13,12 @@ def DependencyRegister_instance():
     return DependencyRegister()
 
 @pytest.fixture(scope='function')
-def mock_DependenyRegister_instance():
-    mock_DependenyRegister_instance = unittest.mock.NonCallableMock(
+def mock_DependencyRegister_instance():
+    mock_DependencyRegister_instance = unittest.mock.NonCallableMock(
             spec=DependencyRegister())
-    mock_DependenyRegister_instance.dependents = {}
-    mock_DependenyRegister_instance.resources = {}
-    return mock_DependenyRegister_instance
+    mock_DependencyRegister_instance.dependents = {}
+    mock_DependencyRegister_instance.resources = {}
+    return mock_DependencyRegister_instance
 
 @pytest.fixture(scope='function')
 def mock_DependencyRegister_class():
@@ -37,6 +37,7 @@ def fake_dependent():
 def undecorated_function():
     def undecorated_function(*args, **kwargs):
         return ('undecorated_function() return value', args, kwargs)
+    return undecorated_function
 
 @pytest.fixture(scope='function')
 def decorator():
