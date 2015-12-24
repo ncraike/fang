@@ -4,22 +4,22 @@ Feature: DependencyRegister.query_resources
 Background:
     Given I am testing the query_resources method of DependencyRegister
 
-Scenario: Calling with dependent (should call _unwrap_dependent)
+Scenario: Calling with a dependent (should call _unwrap_dependent)
     Given I am ignoring all exceptions during the method call
     When I call the method with:
         a dependent
     Then the method _unwrap_dependent should be called with:
         a dependent
 
-Scenario: Calling with a dependent not in dependents
+Scenario: Calling with a dependent not in dependents (should raise exception)
     Given the method _unwrap_dependent will return its one argument unchanged
     When I call the method with:
         a dependent not in dependents
     Then the exception DependentNotFoundError should be raised
 
-Scenario: Calling with a dependent in dependents (query resources)
+Scenario: Calling with a resource name in dependents (should give resource)
     Given the method _unwrap_dependent will return its one argument unchanged
     When I call the method with:
-        a dependent in dependents
+        a resource name in dependents
     Then the result should contain:
         a resource name

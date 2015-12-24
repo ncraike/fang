@@ -122,12 +122,11 @@ def fake_dependent_not_in_dependents(pytest_request, **kwargs):
 
 @argument_line('a dependent in dependents')
 def fake_dependent_in_dependents(pytest_request, **kwargs):
-    fake_dependent, fake_resource_name, mock_DependencyRegister_instance = (
+    fake_dependent, mock_DependencyRegister_instance = (
             pytest_request.getfuncargvalue('fake_dependent'),
-            pytest_request.getfuncargvalue('fake_resource_name'),
             pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
     # Ensure that fake_dependent is in instance.dependents
-    mock_DependencyRegister_instance.dependents[fake_dependent] = [fake_resource_name]
+    mock_DependencyRegister_instance.dependents[fake_dependent] = []
     return fake_dependent
 
 class FakeDependentWhichIsAClass:
@@ -342,6 +341,16 @@ def fake_resource_name_should_be_registered_for_dependent(
         fake_resource_name, fake_dependent, mock_DependencyRegister_instance):
     assert (fake_resource_name in
             mock_DependencyRegister_instance.dependents[fake_dependent])
+
+@argument_line('a resource name in dependents')
+def fake_resource_name_in_dependents(pytest_request, **kwargs):
+    fake_dependent, fake_resource_name, mock_DependencyRegister_instance = (
+            pytest_request.getfuncargvalue('fake_dependent'),
+            pytest_request.getfuncargvalue('fake_resource_name'),
+            pytest_request.getfuncargvalue('mock_DependencyRegister_instance'))
+    # Ensure that fake_dependent is in instance.dependents
+    mock_DependencyRegister_instance.dependents[fake_dependent] = [fake_resource_name]
+    return fake_dependent
 
 @then('the resource name should be in resources')
 def fake_resource_name_should_be_in_resources(
