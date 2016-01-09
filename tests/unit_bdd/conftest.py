@@ -19,3 +19,11 @@ def deferred_when_steps():
     '''This exists to stop pytest searching for a "deferred_when_steps"
     funcarg.'''
     return "THIS SHOULD HAVE BEEN A CALLABLE OF WHEN STEPS"
+
+# This registers some py.test fixtures
+from common.fixtures.dependents import (
+        fake_dependent,
+        fake_dependent_which_is_a_class)
+
+# This registers several "argument" aliases in the BDD language
+import common.bdd.arguments
