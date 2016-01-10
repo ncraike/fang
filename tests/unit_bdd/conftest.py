@@ -24,6 +24,8 @@ def deferred_when_steps():
 from common.fixtures.dependents import (
         fake_dependent,
         fake_dependent_which_is_a_class)
+from common.fixtures.resources import (
+        fake_resource_name)
 
 # This registers several "argument" aliases in the BDD language
 import common.bdd.arguments

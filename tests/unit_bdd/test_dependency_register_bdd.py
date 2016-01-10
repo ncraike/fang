@@ -56,12 +56,6 @@ def mock_DependencyRegister_class():
     return unittest.mock.Mock(
             spec=DependencyRegister)
 
-@pytest.fixture
-@argument_line('a resource name')
-@argument_line('the resource name')
-def fake_resource_name(**kwargs):
-    return 'fake resource name'
-
 @argument_line('a dependent not in dependents')
 @pytest.fixture
 def fake_dependent_not_in_dependents(pytest_request, **kwargs):
