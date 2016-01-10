@@ -24,6 +24,10 @@ def deferred_when_steps():
 from common.fixtures.call_under_test import (
         world_state,
         call_under_test)
+from common.fixtures.click import (
+        fake_click_module,
+        a_click_Command,
+        click_Commands_callback)
 from common.fixtures.dependents import (
         fake_dependent,
         fake_dependent_which_is_a_class)

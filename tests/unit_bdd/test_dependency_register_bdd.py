@@ -168,33 +168,6 @@ def given_method_will_return_its_one_arg_unchanged(method_name, world_state):
     instance = world_state['instance']
     setattr(instance, method_name, lambda x: x)
 
-# fake click.Command
-class Command:
-    '''A fake click.Command class which just implements behaviour we
-    need for tests.'''
-
-    def __init__(self, function_to_wrap):
-        self.callback = function_to_wrap
-
-def Command_callback():
-    return 'This is the callback for a fake click.Command instance'
-
-@pytest.fixture
-def fake_click_module():
-    click = ModuleType('click')
-    click.Command = Command
-    return click
-
-@argument_line('a click Command')
-@pytest.fixture
-def a_click_Command(pytest_request=None):
-    return Command(Command_callback)
-
-@argument_line("the click Command's callback")
-@pytest.fixture
-def click_Commands_callback(pytest_request):
-    return Command_callback
-
 @given("I have the click module imported")
 def with_click_module_imported(request, fake_click_module):
     patcher = unittest.mock.patch(
