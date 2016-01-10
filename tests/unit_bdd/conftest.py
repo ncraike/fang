@@ -21,6 +21,9 @@ def deferred_when_steps():
     return "THIS SHOULD HAVE BEEN A CALLABLE OF WHEN STEPS"
 
 # This registers some py.test fixtures
+from common.fixtures.call_under_test import (
+        world_state,
+        call_under_test)
 from common.fixtures.dependents import (
         fake_dependent,
         fake_dependent_which_is_a_class)
