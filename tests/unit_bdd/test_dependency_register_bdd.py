@@ -71,47 +71,12 @@ def fake_resource_name_in_resources(pytest_request, **kwargs):
     mock_DependencyRegister_instance.resources[fake_resource_name] = set()
     return fake_resource_name
 
-@pytest.fixture
-@argument_line('a None value')
-def a_None_value(**kwargs):
-    return None
-
-def _undecorated_function(*args, **kwargs):
-    return ('undecorated_function() return value', args, kwargs)
-
-@argument_line('an undecorated function')
-@argument_line('the undecorated function')
-@pytest.fixture
-def an_undecorated_function(pytest_request=None):
-    return _undecorated_function
-
-def decorator(f):
-    @functools.wraps(f)
-    def decorator_wrapper(*args, **kwargs):
-        return (
-                'decorator_wrapper() added this',
-                f(*args, **kwargs))
-
-    return decorator_wrapper
-
-@argument_line('a decorated function')
-@argument_line('the decorated function')
-@pytest.fixture
-def a_decorated_function(pytest_request=None):
-    an_undecorated_function = pytest_request.getfuncargvalue(
-            'an_undecorated_function')
-    return decorator(an_undecorated_function)
-
 @given("I have the click module imported")
 def with_click_module_imported(request, fake_click_module):
     patcher = unittest.mock.patch(
             'fang.dependency_register.click', fake_click_module)
     patcher.start()
     request.addfinalizer(patcher.stop)
-
-@then('it should succeed')
-def should_succeed():
-    pass
 
 @then('the dependent should be in dependents')
 def fake_dependent_should_be_in_dependents(
@@ -144,4 +109,3 @@ def fake_dependent_should_be_registered_as_needing_the_fake_resource(
         fake_resource_name, fake_dependent, mock_DependencyRegister_instance):
     assert (fake_dependent in
             mock_DependencyRegister_instance.resources[fake_resource_name])
-

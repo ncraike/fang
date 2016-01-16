@@ -21,6 +21,10 @@ def deferred_when_steps():
     return "THIS SHOULD HAVE BEEN A CALLABLE OF WHEN STEPS"
 
 # Register py.test fixtures
+from common.fixtures.general import (
+        a_none_value,
+        an_undecorated_function,
+        a_decorated_function)
 from common.fixtures.click import (
         fake_click_module,
         a_click_Command,
@@ -31,8 +35,9 @@ from common.fixtures.dependents import (
 from common.fixtures.resources import (
         fake_resource_name)
 
-# Register BDD-specific fixtures
+# Import modules which provide BDD steps
 from common.bdd.call_under_test import *
+from common.bdd.general import *
 
 # This registers several "argument" aliases in the BDD language
 import common.bdd.arguments
