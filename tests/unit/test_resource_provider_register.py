@@ -10,13 +10,25 @@ from fang.resource_provider_register import ResourceProviderRegister
 def mock_instance():
     mock_instance = unittest.mock.NonCallableMock(
             spec=ResourceProviderRegister())
-    mock_instance.dependents = {}
-    mock_instance.resources = {}
+    mock_instance.namespace = None
+    mock_instance.resource_providers = {}
     return mock_instance
 
 @pytest.fixture()
 def resource_name():
     return 'test.resource'
+
+@pytest.fixture()
+def resource():
+    def fake_resource(x):
+        return x
+    return fake_resource
+
+@pytest.fixture()
+def resource_provider(resource):
+    def fake_resource_provider():
+        return resource
+    return fake_resource_provider
 
 def give_unexpected_calls(method_calls, expected_methods_names):
     '''
@@ -106,3 +118,11 @@ class Test_ResourceProviderRegister_register:
                 'No method calls were expected'.format(
                 unexpected_calls,
                 mock_DependenyRegister_instance.method_calls))
+
+    def test__giving_provider__should_register_under_name(
+            self, mock_instance, resource_name, resource_provider):
+
+        result = ResourceProviderRegister.register(
+                mock_instance, resource_name, resource_provider)
+
+        assert mock_instance.resource_providers[resource_name] == resource_provider
