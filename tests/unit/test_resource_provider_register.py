@@ -18,6 +18,14 @@ def mock_instance():
 def resource_name():
     return 'test.resource'
 
+def give_unexpected_calls(method_calls, expected_methods_names):
+    '''
+
+    TODO: Move this to a common test utils module.
+    '''
+    return [call for call in method_calls
+            if call[0] not in expected_methods_names]
+
 class Test_ResourceProviderRegister__construction:
 
     def test__after_creation__namespace_should_default_to_None(self):
@@ -56,6 +64,13 @@ class Test_ResourceProviderRegister_clear:
         assert len(instance.resource_providers) == 0
 
 class Test_ResourceProviderRegister_register:
+    '''
+    Test the instance method ResourceProviderRegister.register().
+
+    NOTE: In these tests we call the method on the class, not the
+    instance, so we can give a mock instance in place of self. This
+    lets us check if register() calls any other instance methods.
+    '''
 
     def test__giving_no_provider_arg___should_return_partial(
             self, mock_instance, resource_name):
@@ -64,8 +79,6 @@ class Test_ResourceProviderRegister_register:
         register() should return a partial of register() with the
         resource_name argument fixed.
 
-        NOTE: In this test we call the method on the class, not an
-        instance, so we can give a mock instance for self.
         '''
         result = ResourceProviderRegister.register(
                 mock_instance, resource_name)
@@ -73,3 +86,23 @@ class Test_ResourceProviderRegister_register:
         assert isinstance(result, functools.partial)
         assert result.func == mock_instance.register
         assert result.args == (resource_name,)
+
+    def test__giving_no_provider_arg__should_not_call_any_other_methods(
+            self, mock_instance, resource_name):
+        '''
+        If register() is called with resource_name but no provider,
+        no other instance methods should be called.
+        '''
+
+        result = ResourceProviderRegister.register(
+                mock_instance, resource_name)
+
+        unexpected_calls = give_unexpected_calls(
+                mock_instance.method_calls, [])
+
+        assert not unexpected_calls, (
+                'Unexpected methods called: {!r} \n'
+                'Called methods: {!r} \n'
+                'No method calls were expected'.format(
+                unexpected_calls,
+                mock_DependenyRegister_instance.method_calls))
