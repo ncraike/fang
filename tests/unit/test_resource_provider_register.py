@@ -84,7 +84,7 @@ class Test_ResourceProviderRegister_register:
     lets us check if register() calls any other instance methods.
     '''
 
-    def test__giving_no_provider_arg___should_return_partial(
+    def test__giving_no_provider__should_return_partial(
             self, mock_instance, resource_name):
         '''
         If register() is called with resource_name but no provider,
@@ -99,7 +99,7 @@ class Test_ResourceProviderRegister_register:
         assert result.func == mock_instance.register
         assert result.args == (resource_name,)
 
-    def test__giving_no_provider_arg__should_not_call_any_other_methods(
+    def test__giving_no_provider__should_not_call_any_other_methods(
             self, mock_instance, resource_name):
         '''
         If register() is called with resource_name but no provider,
