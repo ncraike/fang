@@ -161,3 +161,96 @@ class Test_ResourceProviderRegister_register:
                 allow_override=True)
 
         assert mock_instance.resource_providers[resource_name] == resource_provider
+
+class Test_ResourceProviderRegister_register_instance:
+    '''
+    Test the instance method ResourceProviderRegister.register_instance().
+
+    NOTE: In these tests we call the method on the class, not the
+    instance, so we can give a mock instance in place of self. This
+    lets us test how register_instance() calls other instance methods.
+    '''
+
+    def test__giving_no_instance__should_return_partial(
+            self, mock_instance, resource_name):
+        '''
+        If register_instance() is called with resource_name but no
+        instance, register_instance() should return a partial of
+        register_instance() with the resource_name argument fixed.
+
+        '''
+        result = ResourceProviderRegister.register_instance(
+                mock_instance, resource_name)
+
+        assert isinstance(result, functools.partial)
+        assert result.func == mock_instance.register_instance
+        assert result.args == (resource_name,)
+
+    def test__giving_no_instance_and_extra_kwargs__should_return_partial_with_kwargs(
+            self, mock_instance, resource_name):
+        '''
+        If register_instance() is called with resource_name, no
+        instance, and additional keyword arguments, register_instance()
+        should return a partial of register_instance() which includes
+        those additional keyword arguments.
+        '''
+        result = ResourceProviderRegister.register_instance(
+                mock_instance, resource_name, a='b', c='d')
+
+        assert isinstance(result, functools.partial)
+        assert result.keywords['a'] == 'b'
+        assert result.keywords['c'] == 'd'
+
+    def test__giving_resource_as_instance__should_return_resource(
+            self, mock_instance, resource_name, resource):
+        '''
+        If register_instance() is called with an instance, that instance
+        should be returned from the call.
+
+        This eases uses of register_instance() as a decorator.
+        '''
+        result = ResourceProviderRegister.register_instance(
+                mock_instance, resource_name, resource)
+        assert result == resource
+
+    def test__giving_resource_as_instance__should_call_register_with_resource_name_and_callable(
+            self, mock_instance, resource_name, resource):
+        '''
+        If register_instance() is called with an instance,
+        register_instance() should call register() with a callable which
+        returns that instance. This callable acts as a "resource
+        provider" which always provides this instance.
+        '''
+        result = ResourceProviderRegister.register_instance(
+                mock_instance, resource_name, resource)
+
+        method, args, kwargs = mock_instance.method_calls[0]
+
+        assert method == 'register', "resource() should have been called"
+        assert args == (resource_name,), (
+                "resource() should have been called with the resource name")
+
+        assert 'provider' in kwargs, (
+                "register() should have been given a 'provider' keyword "
+                "argument")
+        given_provider = kwargs['provider']
+        assert callable(given_provider), (
+                "register()'s 'provider' keyword-argument should be callable")
+        assert given_provider() == resource, (
+                "register()'s 'provider' keyword-argument should give the "
+                "resource when called")
+
+    def test__giving_resource_as_instance_and_extra_kwargs__should_call_register_with_kwargs(
+            self, mock_instance, resource_name, resource):
+        '''
+        If register_instance() is called with an instance and additional
+        keyword arguments, register_instance() should include those
+        keyword arguments when calling register().
+        '''
+        result = ResourceProviderRegister.register_instance(
+                mock_instance, resource_name, resource, a='b', c='d')
+        method, args, kwargs = mock_instance.method_calls[0]
+
+        assert method == 'register', "resource() should have been called"
+        assert kwargs['a'] == 'b'
+        assert kwargs['c'] == 'd'
