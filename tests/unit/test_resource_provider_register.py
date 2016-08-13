@@ -3,6 +3,8 @@ import functools
 import unittest.mock
 import pytest
 
+from fang.errors import ProviderAlreadyRegisteredError
+
 # Class under test:
 from fang.resource_provider_register import ResourceProviderRegister
 
@@ -124,5 +126,38 @@ class Test_ResourceProviderRegister_register:
 
         result = ResourceProviderRegister.register(
                 mock_instance, resource_name, resource_provider)
+
+        assert mock_instance.resource_providers[resource_name] == resource_provider
+
+    def test__giving_provider_already_registered__should_raise(
+            self, mock_instance, resource_name, resource_provider):
+
+        ResourceProviderRegister.register(
+                mock_instance, resource_name, resource_provider)
+
+        with pytest.raises(ProviderAlreadyRegisteredError):
+            ResourceProviderRegister.register(
+                    mock_instance, resource_name, resource_provider)
+
+    def test__giving_provider_already_registered_and_override_false__should_raise(
+            self, mock_instance, resource_name, resource_provider):
+
+        ResourceProviderRegister.register(
+                mock_instance, resource_name, resource_provider)
+
+        with pytest.raises(ProviderAlreadyRegisteredError):
+            ResourceProviderRegister.register(
+                    mock_instance, resource_name, resource_provider,
+                    allow_override=False)
+
+    def test__giving_provider_already_registered_and_override_true__should_register(
+            self, mock_instance, resource_name, resource_provider):
+
+        ResourceProviderRegister.register(
+                mock_instance, resource_name, resource_provider)
+
+        ResourceProviderRegister.register(
+                mock_instance, resource_name, resource_provider,
+                allow_override=True)
 
         assert mock_instance.resource_providers[resource_name] == resource_provider
