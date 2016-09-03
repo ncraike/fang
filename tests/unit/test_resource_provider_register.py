@@ -254,3 +254,96 @@ class Test_ResourceProviderRegister_register_instance:
         assert method == 'register', "resource() should have been called"
         assert kwargs['a'] == 'b'
         assert kwargs['c'] == 'd'
+
+class Test_ResourceProviderRegister_mass_register:
+
+    def test__giving_empty_dict__should_not_call_other_methods(
+            self, mock_instance):
+        '''
+        If mass_register() is called with an empty dict, no other
+        instance methods should be called.
+        '''
+        result = ResourceProviderRegister.mass_register(mock_instance, {})
+
+        unexpected_calls = give_unexpected_calls(
+                mock_instance.method_calls, [])
+
+        assert not unexpected_calls, (
+                'Unexpected methods called: {!r} \n'
+                'Called methods: {!r} \n'
+                'No method calls were expected'.format(
+                unexpected_calls,
+                mock_instance.method_calls))
+
+    def test__giving_empty_dict__should_return_None(
+            self, mock_instance):
+        '''
+        If mass_register() is called with an empty dict, it should
+        return None.
+        '''
+        result = ResourceProviderRegister.mass_register(mock_instance, {})
+        assert result is None
+
+    def test__giving_name_and_resource__should_call_register_instance(
+            self, mock_instance, resource_name, resource):
+        result = ResourceProviderRegister.mass_register(
+                mock_instance, {resource_name: resource})
+
+        assert len(mock_instance.method_calls) == 1
+        assert ('register_instance', (resource_name, resource), {}
+                ) in mock_instance.method_calls
+
+    def test__giving_name_and_resource__should_return_None(
+            self, mock_instance, resource_name, resource):
+        result = ResourceProviderRegister.mass_register(
+                mock_instance, {resource_name: resource})
+        assert result is None
+
+    def test__giving_n_names_and_resources__should_call_register_instance_n_times(
+            self, mock_instance):
+        result = ResourceProviderRegister.mass_register(
+                mock_instance,
+                {
+                    'test.resource.name.1': 'resource1',
+                    'test.resource.name.2': 'resource2',
+                    'test.resource.name.3': 'resource3',
+                })
+
+        assert len(mock_instance.method_calls) == 3
+        assert ('register_instance', ('test.resource.name.1', 'resource1'), {}
+                ) in mock_instance.method_calls
+        assert ('register_instance', ('test.resource.name.2', 'resource2'), {}
+                ) in mock_instance.method_calls
+        assert ('register_instance', ('test.resource.name.3', 'resource3'), {}
+                ) in mock_instance.method_calls
+
+    def test__giving_n_names_and_resources__should_return_None(
+            self, mock_instance):
+        result = ResourceProviderRegister.mass_register(
+                mock_instance,
+                {
+                    'test.resource.name.1': 'resource1',
+                    'test.resource.name.2': 'resource2',
+                    'test.resource.name.3': 'resource3',
+                })
+        assert result is None
+
+    def test__giving_kwargs__should_call_register_instance_with_kwargs(
+            self, mock_instance):
+
+        given_kwargs = dict(a=1, b=2)
+
+        result = ResourceProviderRegister.mass_register(
+                mock_instance,
+                {
+                    'test.resource.name.1': 'resource1',
+                    'test.resource.name.2': 'resource2',
+                    'test.resource.name.3': 'resource3',
+                },
+                **given_kwargs)
+
+        for call in mock_instance.method_calls:
+            method, args, kwargs = call
+            assert kwargs == given_kwargs, (
+                    '{!r} should have had keyword arguments {!r}'.format(
+                        call, given_kwargs))
