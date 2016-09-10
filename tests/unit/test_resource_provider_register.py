@@ -3,7 +3,7 @@ import functools
 import unittest.mock
 import pytest
 
-from fang.errors import ProviderAlreadyRegisteredError
+from fang.errors import FangError, ProviderAlreadyRegisteredError
 
 # Class under test:
 from fang.resource_provider_register import ResourceProviderRegister
@@ -15,6 +15,9 @@ def mock_instance():
     mock_instance.namespace = None
     mock_instance.resource_providers = {}
     return mock_instance
+
+other_instance = mock_instance
+pytest.fixture(other_instance)
 
 @pytest.fixture()
 def resource_name():
@@ -347,3 +350,114 @@ class Test_ResourceProviderRegister_mass_register:
             assert kwargs == given_kwargs, (
                     '{!r} should have had keyword arguments {!r}'.format(
                         call, given_kwargs))
+
+class Test_ResourceProviderRegister_load:
+
+    def test__giving_other_register__should_load_resources(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.3': 'new resource',
+        }
+
+        ResourceProviderRegister.load(mock_instance, other_instance)
+
+        assert mock_instance.resource_providers == {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+    def test__giving_register_with_common_keys__should_raise(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+        with pytest.raises(FangError):
+            ResourceProviderRegister.load(mock_instance, other_instance)
+
+    def test__giving_register_with_common_keys__should_not_update(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+        try:
+            ResourceProviderRegister.load(
+                    mock_instance, other_instance, allow_overrides=False)
+        except FangError as e:
+            pass
+
+        assert mock_instance.resource_providers == {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+
+    def test__giving_register_with_common_keys_allow_overrides_False__should_raise(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+        with pytest.raises(FangError):
+            ResourceProviderRegister.load(
+                    mock_instance, other_instance, allow_overrides=False)
+
+    def test__giving_register_with_common_keys_allow_overrides_False__should_not_update(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+        try:
+            ResourceProviderRegister.load(
+                    mock_instance, other_instance, allow_overrides=False)
+        except FangError as e:
+            pass
+
+        assert mock_instance.resource_providers == {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+
+    def test__giving_register_with_common_keys_allow_overrides_True__should_override(
+            self, mock_instance, other_instance):
+        mock_instance.resource_providers = {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'old resource',
+        }
+        other_instance.resource_providers = {
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }
+
+        ResourceProviderRegister.load(
+                mock_instance, other_instance, allow_overrides=True)
+
+        assert mock_instance.resource_providers == {
+                'test.resource.name.1': 'old resource',
+                'test.resource.name.2': 'new resource',
+                'test.resource.name.3': 'new resource',
+        }, 'resource_providers should have been overriden with new resources'
