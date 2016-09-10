@@ -3,7 +3,8 @@ import functools
 import unittest.mock
 import pytest
 
-from fang.errors import FangError, ProviderAlreadyRegisteredError
+from fang.errors import (
+        FangError, ProviderAlreadyRegisteredError, ProviderNotFoundError)
 
 # Class under test:
 from fang.resource_provider_register import ResourceProviderRegister
@@ -461,3 +462,17 @@ class Test_ResourceProviderRegister_load:
                 'test.resource.name.2': 'new resource',
                 'test.resource.name.3': 'new resource',
         }, 'resource_providers should have been overriden with new resources'
+
+class Test_ResourceProviderRegister_resolve:
+
+    def test__given_known_resource_name__should_resolve_provider(
+            self, mock_instance, resource_name, resource, resource_provider):
+        mock_instance.resource_providers = {resource_name: resource_provider}
+
+        result = ResourceProviderRegister.resolve(mock_instance, resource_name)
+
+        assert result == resource
+
+    def test__given_unknown_resource_name__should_raise(self, mock_instance):
+        with pytest.raises(ProviderNotFoundError):
+            ResourceProviderRegister.resolve(mock_instance, 'unknown.resource')
