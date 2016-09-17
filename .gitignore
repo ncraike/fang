@@ -2,23 +2,23 @@
 *.~
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__
 *.py[cod]
 
 # C extensions
 *.so
 
 # Distribution / packaging
-bin/
-build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
+/bin/
+/build/
+/develop-eggs/
+/dist/
+/eggs/
+/lib/
+/lib64/
+/parts/
+/sdist/
+/var/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -34,9 +34,13 @@ pip-delete-this-directory.txt
 .cache
 nosetests.xml
 coverage.xml
+/tests/htmlcov
 
 # Translations
 *.mo
 
 # Sphinx documentation
 docs/_build/
+
+# Various OS-created files
+.DS_Store

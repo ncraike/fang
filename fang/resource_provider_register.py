@@ -67,4 +67,3 @@ class ResourceProviderRegister:
             raise ProviderNotFoundError(resource_name=resource_name)
 
         return self.resource_providers[resource_name]()
-

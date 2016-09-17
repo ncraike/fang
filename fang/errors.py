@@ -45,4 +45,3 @@ class ProviderNotFoundError(FangError):
                     "A provider could not be found for the requested "
                     "resource")
         super().__init__(message)
-

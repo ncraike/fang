@@ -65,10 +65,11 @@ setup(
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:
-    # $ pip install -e .[dev,test]
+    # $ pip install -e .[development,test]
     extras_require = {
-        'dev': [],
-        'test': [],
+        'development': ['pytest', 'pytest-cov', 'pytest-xdist'],
+        'test': ['pytest', 'pytest-cov', 'codecov'],
+        'docs': ['docutils', 'Pygments'],
     },
 
     # If there are data files included in your packages that need to be

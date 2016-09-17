@@ -48,6 +48,12 @@ class DependencyRegister:
             return cls._unwrap_func(dependent)
 
     def _register_dependent(self, dependent, resource_name):
+        '''
+        Register a mapping of the dependent to resource name.
+
+        After calling, dependency_register.dependents[dependent] should
+        contain resource_name.
+        '''
         if dependent not in self.dependents:
             self.dependents[dependent] = []
         self.dependents[dependent].insert(0, resource_name)
@@ -56,8 +62,12 @@ class DependencyRegister:
         if resource_name not in self.resources:
             self.resources[resource_name] = set()
         self.resources[resource_name].add(dependent)
-        
+
     def register(self, resource_name, dependent=None):
+        '''
+        Register the given dependent as depending on the "resource"
+        named by resource_name.
+        '''
         if dependent is None:
             # Give a partial usable as a decorator
             return partial(self.register, resource_name)
@@ -76,5 +86,3 @@ class DependencyRegister:
             raise DependentNotFoundError(dependent=dependent)
 
         return self.dependents[dependent]
-
-

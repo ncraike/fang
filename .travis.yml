@@ -1,0 +1,17 @@
+sudo: false
+language: python
+python:
+  - "3.3"
+  - "3.4"
+install:
+ - pip install -U pip
+ - pip install -U wheel setuptools
+ - pip install -U -e .[docs,test]
+ - pip list
+ - python --version
+script:
+ - py.test --cov=fang --cov-config=tests/.coveragerc --cov-report=html --cov-report=term tests/
+ - rst2html.py README.rst README.html
+ - rst2html.py DESCRIPTION.rst DESCRIPTION.html
+after_success:
+ - codecov
