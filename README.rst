@@ -5,6 +5,10 @@ Fang: Dependency injection for Python
     :target: https://travis-ci.org/ncraike/fang
     :alt: Test status
 
+.. image:: https://codecov.io/github/ncraike/fang/coverage.svg?branch=master
+    :target: https://codecov.io/github/ncraike/fang?branch=master
+    :alt: Test coverage
+
 Fang is a dependency injection library for Python.
 
 Dependency injection (DI) is uncommon in Python. It's usually written off as a tool for other languages – languages with static typing, strict interfaces, etc – which is unneeded in Python.
