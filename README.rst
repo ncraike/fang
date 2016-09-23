@@ -1,11 +1,11 @@
-Fang: Dependency injection for Python
-=====================================
+Fang: Dependency injection for Python |Test status| |Code coverage|
+===================================================================
 
-.. image:: https://travis-ci.org/ncraike/fang.svg?branch=master
+.. |Test status| image:: https://travis-ci.org/ncraike/fang.svg?branch=master
     :target: https://travis-ci.org/ncraike/fang
     :alt: Test status
 
-.. image:: https://codecov.io/github/ncraike/fang/coverage.svg?branch=master
+.. |Code coverage| image:: https://codecov.io/github/ncraike/fang/coverage.svg?branch=master
     :target: https://codecov.io/github/ncraike/fang?branch=master
     :alt: Test coverage
 
