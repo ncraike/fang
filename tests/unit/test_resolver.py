@@ -20,6 +20,20 @@ def mock_instance():
     return mock_instance
 
 @pytest.fixture()
+def mock_DependencyRegister():
+    mock = NonCallableMock(spec=DependencyRegister())
+    mock.dependents = {}
+    mock.resources = {}
+    return mock
+
+@pytest.fixture()
+def mock_ResourceProviderRegister():
+    mock = NonCallableMock(spec=ResourceProviderRegister())
+    mock.namespace = None
+    mock.resource_providers = {}
+    return mock
+
+@pytest.fixture()
 def resource_name():
     return 'test.resource'
 
@@ -61,3 +75,10 @@ class Test_DependencyResolver__construction:
         '''
         instance = DependencyResolver()
         assert instance.dependency_register is None
+
+    def test__after_creation__dependency_register_should_be_init(
+            self, mock_DependencyRegister, mock_ResourceProviderRegister):
+        instance = DependencyResolver(
+                mock_DependencyRegister, mock_ResourceProviderRegister)
+
+        assert instance.dependency_register is mock_DependencyRegister
