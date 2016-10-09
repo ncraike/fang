@@ -60,7 +60,7 @@ def give_unexpected_calls(method_calls, expected_methods_names):
 class Test_DependencyResolver__construction:
 
     @pytest.mark.xfail(raises=AttributeError)
-    def test__after_creation_with_no_args__dependency_register_should_be_None(self):
+    def test__after_construction_with_no_args__dependency_register_should_be_None(self):
         '''
         This test fails due to [issue #12]
         (https://github.com/ncraike/fang/issues/12).
@@ -76,28 +76,28 @@ class Test_DependencyResolver__construction:
         instance = DependencyResolver()
         assert instance.dependency_register is None
 
-    def test__after_creation__dependency_register_should_be_init(
+    def test__after_construction__dependency_register_should_be_init(
             self, mock_DependencyRegister, mock_ResourceProviderRegister):
         instance = DependencyResolver(
                 mock_DependencyRegister, mock_ResourceProviderRegister)
 
         assert instance.dependency_register is mock_DependencyRegister
 
-    def test__after_creation__resource_provider_register_should_be_init(
+    def test__after_construction__resource_provider_register_should_be_init(
             self, mock_DependencyRegister, mock_ResourceProviderRegister):
         instance = DependencyResolver(
                 mock_DependencyRegister, mock_ResourceProviderRegister)
 
         assert instance.resource_provider_register is mock_ResourceProviderRegister
 
-    def test__after_creation__query_dependents_resource_should_be_delegated(
+    def test__after_construction__query_dependents_resource_should_be_delegated(
             self, mock_DependencyRegister, mock_ResourceProviderRegister):
         instance = DependencyResolver(
                 mock_DependencyRegister, mock_ResourceProviderRegister)
 
         assert instance.query_dependents_resources is mock_DependencyRegister.query_resources
 
-    def test__after_creation__resolve_should_be_delegated(
+    def test__after_construction__resolve_should_be_delegated(
             self, mock_DependencyRegister, mock_ResourceProviderRegister):
         instance = DependencyResolver(
                 mock_DependencyRegister, mock_ResourceProviderRegister)
