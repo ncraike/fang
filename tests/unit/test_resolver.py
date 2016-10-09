@@ -82,3 +82,24 @@ class Test_DependencyResolver__construction:
                 mock_DependencyRegister, mock_ResourceProviderRegister)
 
         assert instance.dependency_register is mock_DependencyRegister
+
+    def test__after_creation__resource_provider_register_should_be_init(
+            self, mock_DependencyRegister, mock_ResourceProviderRegister):
+        instance = DependencyResolver(
+                mock_DependencyRegister, mock_ResourceProviderRegister)
+
+        assert instance.resource_provider_register is mock_ResourceProviderRegister
+
+    def test__after_creation__query_dependents_resource_should_be_delegated(
+            self, mock_DependencyRegister, mock_ResourceProviderRegister):
+        instance = DependencyResolver(
+                mock_DependencyRegister, mock_ResourceProviderRegister)
+
+        assert instance.query_dependents_resources is mock_DependencyRegister.query_resources
+
+    def test__after_creation__resolve_should_be_delegated(
+            self, mock_DependencyRegister, mock_ResourceProviderRegister):
+        instance = DependencyResolver(
+                mock_DependencyRegister, mock_ResourceProviderRegister)
+
+        assert instance.resolve is mock_ResourceProviderRegister.resolve
