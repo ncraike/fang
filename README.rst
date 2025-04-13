@@ -1,13 +1,11 @@
-Fang: Dependency injection for Python |Test status| |Code coverage|
-===================================================================
+NOTE: This project is now hosted `on Codeberg`_ and will no longer be updated here.
+=====================================
+.. _on Codeberg: https://codeberg.org/ncraike/fang
 
-.. |Test status| image:: https://travis-ci.org/ncraike/fang.svg?branch=master
-    :target: https://travis-ci.org/ncraike/fang
-    :alt: Test status
+------------
 
-.. |Code coverage| image:: https://codecov.io/github/ncraike/fang/coverage.svg?branch=master
-    :target: https://codecov.io/github/ncraike/fang?branch=master
-    :alt: Test coverage
+Fang: Dependency injection for Python
+=====================================
 
 Fang is a dependency injection library for Python.
 
